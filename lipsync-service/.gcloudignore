@@ -1,0 +1,7 @@
+.git
+__pycache__
+*.pyc
+Wav2Lip/temp/*
+Wav2Lip/results/*
+Wav2Lip/checkpoints/*
+Wav2Lip/evaluation/*

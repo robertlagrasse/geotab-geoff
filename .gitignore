@@ -1,0 +1,12 @@
+node_modules/
+.env
+.firebase/
+dist/
+*.log
+.firebaserc
+token
+.venv/
+__pycache__/
+*.pyc
+*.pth
+Wav2Lip/

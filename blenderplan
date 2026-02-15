@@ -1,0 +1,153 @@
+Next Step
+Want me to pull TalkingHead's exact blend shape spec and write out the MPFB workflow so you have a clear checklist for building 3D Geoff?Working now to build the comprehensive plan, which includes me building an avatar in blender/MPFB. Is there anywhere where people share their blender people? Maybe I can find a suitable stand in/starting point?8:09 PMSearched the webfree 3D human character model GLB download Mixamo compatible blend shapes10 resultsMixamo 3D Models for Free - Download Free 3D · Clara.ioclara.ioMixamo : Free 3D Animated Characters • 3D CAD VRvrforcad.comDownload Free & Premium Characters Mixamo 3D Models | TurboSquidwww.turbosquid.comMixamo 3D Models download - Free3Dfree3d.comMixamo : Free 3D Animated Characters • SimLab Soft Blogblog.simlab-soft.comMixamo 3d models3dmdb.comFree Mixamo 3D Models Downloadrigmodels.comMixamo 3D Models for Free Download - Meshywww.meshy.aiMixamo 3D models - Sketchfabsketchfab.comBlendshapes 3d models3dmdb.comTalkingHead compatible 3D avatar free download ARKit visemes GLB10 resultsGitHub - met4citizen/TalkingHead: Talking Head (3D): A JavaScript class for real-time lip-sync using full-body 3D avatars.github.comGitHub - JasonCocomo/TalkingHead3D: Talking Head (3D): A JavaScript class for real-time lip-sync using Ready Player Me full-body 3D avatars.github.comDownloading an avatar GLB with ARkit and Oculus - General - Ready Player Me Developer Forumsforum.readyplayer.meTalkingHead/README.md at main · met4citizen/TalkingHeadgithub.comTalkingHead/blender/build-visemes-from-arkit.py at main · met4citizen/TalkingHeadgithub.comGitHub - met4citizen/TalkingHead: Talking Head (3D): A JavaScript class for real-time lip-sync using Ready Player Me full-body 3D avatars.github.comGitHub - TonAldo48/TalkingHead: Talking Head (3D): A JavaScript class for real-time lip-sync using Ready Player Me full-body 3D avatars.github.comGitHub - bdAgentAI/talkinghead: Talking Head (3D): A JavaScript class for real-time lip-sync using Ready Player Me full-body 3D avatars.github.comTalkingHead/ at main · met4citizen/TalkingHeadgithub.comTalking Avatar - Expressive and Talking 3D Characters For Everyone!polywink.comSketchfab free realistic male character rigged ARKit blendshapes download10 resultsRigged T-Pose Human Male w 50 Face Blendshapes - Download Free 3D model by Mike Alger (@mikealger) [cc7e459] - Sketchfabsketchfab.comMegumin (Full Rig - 52 ARKit Blendshapes) - 3D model by AbaKat [77110d9] - Sketchfabsketchfab.comBlendshapes 3D models - Sketchfabsketchfab.comFree Cartoon Game Man Character (Rigged) - Download Free 3D model by Canino3d [a69c896] - Sketchfabsketchfab.comRigged character - Download Free 3D model by MotionStreamStudios [a370d35] - Sketchfabsketchfab.comArkit 3D models - Sketchfabsketchfab.comRigged-character 3D models - Sketchfabsketchfab.comRigged Male Character [Free] - Download Free 3D model ...sketchfab.comMale Base Mesh (T- Pose)+(Rigged) - Download Free 3D model by Malbeasy [5d91d2f] - Sketchfabsketchfab.comRealistic 3D Male Character – Fully Rigged - 3D model by dengxiart [2189477] - Sketchfabsketchfab.comRigged T-Pose Human Male w 50 Face Blendshapes - Download Free 3D model by Mike Alger (@mikealger)sketchfab.comMicrosoft Rocketbox free 3D characters library blendshapes download10 resultsGitHub - microsoft/Microsoft-Rocketbox: Microsoft Rocketbox is now available with MIT license! The library of 115 rigged avatars offers flexibility, enabling the easy use of animations across characters and the mixing and matching of texture elements.github.comMicrosoft-Rocketbox/README.md at master · microsoft/Microsoft-Rocketboxgithub.comHeadBox: Facial Blendshape Animation Toolkit for Rocketboxwww.microsoft.comHeadBox: A Facial Blendshape Animation Toolkit for the Microsoft Rocketbox Library - Microsoft Researchwww.microsoft.comMicrosoft Rocketbox avatar library now available for research and academic use - Microsoft Researchwww.microsoft.comThe Rocketbox Library and the Utility of Freely Available ...vhil.stanford.eduGitHub - JashoBell/Rocketbox-Unity: Fork of microsoft/Microsoft-Rocketbox with some modifications to the import script and the child/profession avatars taken out.github.comMicrosoft Rocketbox Avatar Library Reviewsites.psu.eduMicrosoft-Rocketbox/Docs/all.pdf at master · microsoft/Microsoft-Rocketboxgithub.comThe Rocketbox library and the utility of freely available rigged avatars - Microsoft Researchwww.microsoft.comDoneFound some great options. Here's the rundown:
+
+Free Avatar Libraries with Blendshapes
+1. Microsoft Rocketbox (Best Option) ⭐
+github.com/microsoft/Microsoft-Rocketbox
+
+115 rigged avatars — diverse in race, gender, age, occupation
+MIT License — fully free, commercial use OK
+15 visemes + 48 FACS blendshapes already included
+Designed for research labs doing exactly what you're doing
+Some avatars look like working professionals (construction, service, etc.)
+
+Catch: Models are in 3dsMax/FBX format. You'd need to convert to GLB and verify the blendshapes map to what TalkingHead expects (Oculus visemes specifically).
+
+2. Sketchfab — "Rigged T-Pose Human Male w 50 Face Blendshapes"
+sketchfab.com/3d-models/rigged-t-pose-human-male-w-50-face-blendshapes-cc7e459...
+
+Free download, CC Attribution license
+50 face blendshapes
+Photorealistic scan of an actual person
+29,000+ downloads — battle-tested
+
+Catch: It's a scan of a specific guy (Mike Alger). Might not match "Geoff" vibe. Would need to verify blendshape names match TalkingHead's requirements.
+
+3. Mixamo Characters (Adobe)
+mixamo.com
+
+Free characters with Mixamo-compatible rigs
+Easy to download FBX, convert to GLB
+Animations included
+
+Catch: Characters are more stylized/game-y. Facial blendshapes may not be included — Mixamo is primarily about body animation.
+
+My Recommendation
+Start with Microsoft Rocketbox.
+
+Clone the repo
+Browse Docs/all.pdf — it has pictures of all 115 avatars
+Find a middle-aged male that looks trustworthy/professional
+Grab the blendshape version (not the bone-rigged version)
+Convert FBX → GLB in Blender
+Run TalkingHead's Blender script to verify/add any missing Oculus visemes
+
+The Rocketbox library was literally built for VR research on avatar embodiment. The blendshapes were added specifically for lip sync (15 visemes + Oculus Lipsync compatibility). This is as close to plug-and-play as you'll get.
+
+Want me to find the PDF showing all the Rocketbox avatar thumbnails so you can pick a Geoff candidate?yeah8:12 PMSearched the webMicrosoft-Rocketbox/Docs/all.pdf at master · microsoft/Microsoft-Rocketboxgithub.comMicrosoft Rocketbox avatar thumbnails preview images all characters10 resultsMicrosoft Rocketbox avatar library now available for research and academic use - Microsoft Researchwww.microsoft.comGitHub - microsoft/Microsoft-Rocketbox: Microsoft Rocketbox is now available with MIT license! The library of 115 rigged avatars offers flexibility, enabling the easy use of animations across characters and the mixing and matching of texture elements.github.comMicrosoft Rocketbox Avatar Library Reviewsites.psu.eduMicrosoft Rocketbox avatar library - Microsoft Researchwww.microsoft.comThe Rocketbox library and the utility of freely available rigged avatars - Microsoft Researchwww.microsoft.comMicrosoft Rocketbox Avatar Library - Meta-Guide.commeta-guide.comFrontiers | The Rocketbox Library and the Utility of Freely Available Rigged Avatarswww.frontiersin.orgDownloads – Eyal Ofekeyalofek.orgMicrosoft-Rocketbox/Assets/Editor/FixRocketboxMaxImport.cs at master · microsoft/Microsoft-Rocketboxgithub.comMicrosoft Rocketbox - Immersive Virtual Environments Laboratoryvr.cs.ucl.ac.ukFrontiers | The Rocketbox Library and the Utility of Freely Available Rigged Avatarswww.frontiersin.orgDoneI found the Frontiers paper which has Figure 10 showing the avatar lineup, but I can't extract the actual image. Let me get you the direct link to browse them yourself, plus find the raw PDF that has all the avatar thumbnails.
+
+Quick Access to Rocketbox Avatar Catalog
+Option 1: GitHub Docs Folder (PDF with all 115 avatars)
+Direct download link:
+https://github.com/microsoft/Microsoft-Rocketbox/raw/master/Docs/all.pdf
+This PDF contains thumbnail images of every avatar in the library — you can scroll through and pick your Geoff.
+
+Option 2: Browse the Frontiers Paper Figure 10
+The academic paper has a nice grid showing diversity in the library:
+https://www.frontiersin.org/articles/10.3389/frvir.2020.561558/full
+Scroll to Figure 10 — it shows a sample grid of avatars with different races, genders, ages, and occupations.
+
+Option 3: Clone the Repo and Browse Images
+The repo includes an Images folder with preview renders:
+bashgit clone https://github.com/microsoft/Microsoft-Rocketbox.git
+# Then browse: Microsoft-Rocketbox/Images/
+
+What to Look For (Geoff Criteria)
+Based on your photorealistic Geoff concept, you want:
+AttributeTargetGenderMaleAgeMiddle-aged (40s-50s)BuildAverage/sturdy working manVibeTrustworthy, approachable, experiencedAttireWork clothes, safety vest, casual professional
+Promising avatar types in Rocketbox:
+
+Construction workers
+Maintenance/service workers
+Delivery drivers
+Generic "business casual" males
+Security personnel
+
+
+Once you download that all.pdf and find a candidate, let me know which one you're thinking and I can help you figure out the conversion pipeline (FBX → Blender → add Oculus visemes → export GLB).Male_Adult_058:33 PMGood pick! Let me find the details on Male_Adult_05 and confirm what you're working with.Searched the webMicrosoft Rocketbox "Male_Adult_05" avatar2 resultsMoveBox-for-Microsoft-Rocketbox/MoveBox_CaptureStudio/Assets/Male_Adult_05.fbx at master · microsoft/MoveBox-for-Microsoft-Rocketboxgithub.comSteam Workshop::Microsoft Rocketbox Avatar Packsteamcommunity.comDoneExcellent news — someone already converted the Rocketbox avatars to include ARKit facecap, Vive face/eye tracking, and lipsync. That Steam Workshop entry confirms Male_Adult_05 has the blendshapes you need.
+
+Male_Adult_05 — Your Geoff Base
+GitHub Path:
+Microsoft-Rocketbox/Assets/Avatars/Adults/Male_Adult_05/
+What's included:
+
+FBX model files (multiple LODs)
+Textures (diffuse, specular, normal maps)
+Two versions: bone-based facial rig and blendshape version
+
+Blendshapes already available (per HeadBox release):
+
+15 visemes (lip sync)
+48 FACS action units
+30 Vive facial tracker shapes
+ARKit-compatible blendshapes
+
+
+Conversion Pipeline: Male_Adult_05 → TalkingHead-ready GLB
+Here's your workflow:
+Step 1: Get the Blendshape Version
+bashgit clone https://github.com/microsoft/Microsoft-Rocketbox.git
+cd Microsoft-Rocketbox/Assets/Avatars/Adults/Male_Adult_05/
+```
+
+Look for files with `_blendshapes` or check the `Blendshapes` subfolder — they released both bone-rigged and blendshape versions.
+
+### Step 2: Import to Blender
+1. Open Blender
+2. File → Import → FBX
+3. Select the blendshape version FBX
+
+### Step 3: Verify/Add Oculus Visemes
+TalkingHead needs these specific viseme names:
+```
+viseme_sil, viseme_PP, viseme_FF, viseme_TH, viseme_DD, 
+viseme_kk, viseme_CH, viseme_SS, viseme_nn, viseme_RR, 
+viseme_aa, viseme_E, viseme_I, viseme_O, viseme_U
+```
+
+The Rocketbox 15 visemes should map directly, but you may need to rename them. TalkingHead includes a Blender script to help:
+```
+https://github.com/met4citizen/TalkingHead/blob/main/blender/build-visemes-from-arkit.py
+```
+
+### Step 4: Add Mixamo Rig (if needed)
+TalkingHead expects a Mixamo-compatible skeleton. Rocketbox uses its own rig, so you may need to:
+- Use Blender's "Rigify" or retarget to Mixamo naming
+- Or upload to Mixamo for auto-rigging (it accepts custom meshes)
+
+### Step 5: Export as GLB
+```
+File → Export → glTF 2.0 (.glb)
+Settings:
+
+Include: Selected Objects, +Shapekeys
+Transform: +Y Up
+Geometry: Apply Modifiers, UVs, Normals, Tangents
+Animation: Shapekeys
+
+Step 6: Test in TalkingHead
+Drop Geoff.glb into your project and load it:
+javascriptconst head = new TalkingHead(container, {
+  modelUrl: '/assets/Geoff.glb'
+});
+
+Shortcut Option
+That Steam Workshop pack suggests someone already did the conversion work. If you can extract that VRChat-ready model, it might already have:
+
+ARKit blendshapes ✓
+Visemes ✓
+Proper rigging ✓
+
+You'd just need to export it to GLB format.
+
+Want me to dig deeper into the exact blendshape naming mapping between Rocketbox's 15 visemes and TalkingHead's Oculus viseme requirements?
