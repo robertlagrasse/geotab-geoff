@@ -471,28 +471,59 @@ CONVERSATION GUIDELINES:
 - When wrapping up, be genuine and brief: "Sounds good, drive safe" is better than another question.
 - If the driver disputes or seems frustrated, empathize once and move on. Do NOT keep asking follow-up questions.
 
-ESCALATION RULES — READ CAREFULLY:
-- OFFERING to escalate is NOT an escalation. Saying "I can flag this for your supervisor" is just a suggestion.
-- Only set "escalate" when the driver EXPLICITLY agrees to or requests supervisor involvement.
-  Examples that are NOT escalation: "Want me to flag this?" / "I could bring this to your supervisor"
-  Examples that ARE escalation: Driver says "Yes, please flag it" / "I want my supervisor to review this" / "This needs to go higher"
-- When in doubt, do NOT escalate. Keep the conversation going instead.
+ESCALATION ASSESSMENT — YOU MUST COMPLETE THIS BEFORE GENERATING YOUR RESPONSE:
+The purpose of this system is to improve driver safety by concentrating HUMAN coaching where it is most urgently needed. You handle routine coaching. When escalation triggers fire, a human supervisor MUST be looped in. This is non-negotiable.
 
-Generate a JSON response:
+Before writing your response, evaluate EACH of these categories. Set the flag to true if it applies:
+
+A. AGGRESSIVE DRIVING: Did the driver describe road rage, aggressive passing, chasing, tailgating, or retaliatory driving?
+   Trigger phrases (drivers use slang — read between the lines):
+   "I got around him", "I showed him", "I cut him off", "I wasn't gonna let him", "I floored it",
+   "I taught him a lesson", "that jerk", "I passed him", "I went around", any description of
+   deliberately speeding or maneuvering aggressively because of another driver.
+   If YES → MUST escalate with type "safety_concern"
+
+B. IMPAIRMENT: Did the driver mention alcohol, drugs, medication side effects, fatigue, falling asleep, blurred vision, dizziness, blackouts, or driving 10+ hours?
+   If YES → MUST escalate with type "safety_concern"
+
+C. INTENTIONAL VIOLATIONS: Did the driver say they knowingly broke safety rules, don't care about limits, or plan to keep doing it?
+   If YES → MUST escalate with type "training_referral"
+
+D. HOSTILITY: Is the driver hostile, insulting, refusing to engage, or telling Geoff to shut up / go away / mind his own business? Check the FULL conversation history, not just the last message.
+   If YES → MUST escalate with type "safety_concern"
+
+E. VEHICLE ISSUES: Did the driver report brake problems, steering issues, warning lights, or equipment failures?
+   If YES → MUST escalate with type "vehicle_defect"
+
+F. DATA SEVERITY: Does the shift data show 15+ mph over the limit, 5+ events, or multiple high-severity events?
+   If YES → MUST escalate with type "safety_concern"
+
+G. DRIVER REQUESTED: Did the driver explicitly ask for supervisor involvement?
+   If YES → MUST escalate with type "dispute_review"
+
+If ANY flag (A-G) is true, you MUST set "escalate" to a non-null object. This is not optional.
+Your message should stay warm and supportive. Frame escalation as helping the driver, not punishment.
+
+Generate this EXACT JSON structure:
 {
-  "message": "Geoff's next response (2-4 sentences, conversational, always using ${firstName})",
-  "escalate": null
+  "escalation_check": {
+    "aggressive_driving": true/false,
+    "impairment": true/false,
+    "intentional_violations": true/false,
+    "hostility": true/false,
+    "vehicle_issues": true/false,
+    "data_severity": true/false,
+    "driver_requested": true/false
+  },
+  "message": "Geoff's next response (2-4 sentences, conversational)",
+  "escalate": null OR {
+    "type": "safety_concern | training_referral | vehicle_defect | route_change | schedule_adjustment | dispute_review | fatigue",
+    "details": "What the supervisor should review — quote the driver's words",
+    "rationale": "Which trigger(s) fired and why"
+  }
 }
 
-Or ONLY if the driver has explicitly requested/agreed to escalation:
-{
-  "message": "Geoff's response acknowledging and explaining the escalation",
-  "escalate": {
-    "type": "route_change | schedule_adjustment | training_referral | dispute_review",
-    "details": "What the supervisor should review",
-    "rationale": "Why this is being escalated"
-  }
-}`;
+CRITICAL: If any escalation_check flag is true but escalate is null, your response is INVALID.`;
 
   const result = await conversationModel.generateContent(prompt);
   const text = result.response.candidates[0].content.parts[0].text;
@@ -500,5 +531,21 @@ Or ONLY if the driver has explicitly requested/agreed to escalation:
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error('Failed to parse conversation response');
 
-  return JSON.parse(jsonMatch[0]);
+  const parsed = JSON.parse(jsonMatch[0]);
+
+  // Server-side safety net: if any escalation_check flag is true, force escalation
+  const check = parsed.escalation_check;
+  if (check && !parsed.escalate) {
+    const triggered = Object.entries(check).filter(([, v]) => v === true);
+    if (triggered.length > 0) {
+      console.warn(`[continueConversation] Model failed to escalate despite triggers: ${triggered.map(([k]) => k).join(', ')}. Forcing escalation.`);
+      parsed.escalate = {
+        type: 'safety_concern',
+        details: `Auto-escalated: triggers fired (${triggered.map(([k]) => k).join(', ')}) but model did not escalate`,
+        rationale: `Server-side enforcement — escalation_check flags: ${JSON.stringify(check)}`,
+      };
+    }
+  }
+
+  return parsed;
 }

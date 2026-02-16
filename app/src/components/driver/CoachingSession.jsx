@@ -39,6 +39,30 @@ export default function CoachingSession() {
   // The logged-in user's first name from Google
   const userName = user?.displayName?.split(' ')[0] || 'Driver';
 
+  // Rotating transportation verbs for the loading state
+  const drivingPhrases = [
+    'Checking mirrors...',
+    'Merging into traffic...',
+    'Shifting gears...',
+    'Navigating route...',
+    'Fueling up...',
+    'Scanning the road ahead...',
+    'Adjusting mirrors...',
+    'Plotting course...',
+    'Cruising along...',
+    'Signaling turn...',
+  ];
+  const [phraseIndex, setPhraseIndex] = useState(0);
+
+  useEffect(() => {
+    if (!isProcessing) return;
+    setPhraseIndex(Math.floor(Math.random() * drivingPhrases.length));
+    const interval = setInterval(() => {
+      setPhraseIndex((i) => (i + 1) % drivingPhrases.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [isProcessing]);
+
   // Listen to session
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, 'sessions', sessionId), (snapshot) => {
@@ -82,7 +106,7 @@ export default function CoachingSession() {
       const firstGeoff = session.transcript.find((t) => t.speaker === 'geoff');
       if (firstGeoff) {
         const personalized = personalizeText(firstGeoff.text, userName);
-        avatarRef.current?.speak(personalized, null);
+        avatarRef.current?.speak(personalized, firstGeoff.audioUrl || null, firstGeoff.videoUrl || null);
         setInitialSpoken(true);
       }
     }
@@ -102,7 +126,7 @@ export default function CoachingSession() {
         driverName: userName,
       });
       if (result.data.message) {
-        avatarRef.current?.speak(result.data.message, result.data.audioUrl);
+        avatarRef.current?.speak(result.data.message, result.data.audioUrl, result.data.videoUrl || null);
       }
     } catch (err) {
       console.error('Failed to send response:', err);
@@ -211,6 +235,12 @@ export default function CoachingSession() {
 
           {isSessionActive && (
             <div className="session-controls">
+              {isProcessing && (
+                <div className="geoff-processing-indicator">
+                  <span className="processing-icon" />
+                  <span className="processing-phrase">{drivingPhrases[phraseIndex]}</span>
+                </div>
+              )}
               <div className="input-row">
                 <input
                   type="text"

@@ -32,7 +32,10 @@ const GeoffAvatar = forwardRef(function GeoffAvatar({ onReady }, ref) {
   }, []);
 
   useImperativeHandle(ref, () => ({
-    speak: (text, audioUrl) => {
+    speak: (text, audioUrl, videoUrl) => {
+      if (videoUrl) {
+        return playBackendVideo(videoUrl);
+      }
       if (lipsyncAvailable) {
         return speakWithVideo(text);
       }
@@ -53,6 +56,29 @@ const GeoffAvatar = forwardRef(function GeoffAvatar({ onReady }, ref) {
       setThinking(false);
     },
   }));
+
+  // Backend-generated lipsync video (pre-rendered via Cloud Function)
+  async function playBackendVideo(videoUrl) {
+    setSpeaking(true);
+    setShowVideo(true);
+
+    const video = videoRef.current;
+    if (video) {
+      video.src = videoUrl;
+      video.onended = () => {
+        setShowVideo(false);
+        setSpeaking(false);
+      };
+      video.onerror = () => {
+        setShowVideo(false);
+        setSpeaking(false);
+      };
+      video.play().catch(() => {
+        setShowVideo(false);
+        setSpeaking(false);
+      });
+    }
+  }
 
   // Default mode: static image + TTS audio
   async function speakWithAudio(text, existingAudioUrl) {

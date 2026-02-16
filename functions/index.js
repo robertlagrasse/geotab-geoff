@@ -14,6 +14,61 @@ initializeApp();
 const db = getFirestore();
 const storage = getStorage();
 
+// Lipsync service — local GPU exposed via Cloudflare tunnel
+const LIPSYNC_API = process.env.LIPSYNC_API_URL || '';
+const LIPSYNC_VIDEO_BASE = process.env.LIPSYNC_VIDEO_URL || '';
+const GEOFF_IMAGE_URL = 'https://storage.googleapis.com/geotab-geoff-assets/geoff.png';
+
+async function generateLipsyncVideo(audioUrl) {
+  if (!LIPSYNC_API) return null;
+
+  try {
+    // Download the TTS audio
+    const audioRes = await fetch(audioUrl);
+    if (!audioRes.ok) return null;
+    const audioBuffer = await audioRes.arrayBuffer();
+
+    // Download geoff.png
+    const imgRes = await fetch(GEOFF_IMAGE_URL);
+    if (!imgRes.ok) return null;
+    const imgBuffer = await imgRes.arrayBuffer();
+
+    // Build multipart form data
+    const boundary = '----GeoffLipsync' + Date.now();
+    const parts = [];
+
+    parts.push(`--${boundary}\r\nContent-Disposition: form-data; name="image"; filename="geoff.png"\r\nContent-Type: image/png\r\n\r\n`);
+    parts.push(Buffer.from(imgBuffer));
+    parts.push(`\r\n--${boundary}\r\nContent-Disposition: form-data; name="audio"; filename="speech.mp3"\r\nContent-Type: audio/mpeg\r\n\r\n`);
+    parts.push(Buffer.from(audioBuffer));
+    parts.push(`\r\n--${boundary}--\r\n`);
+
+    const body = Buffer.concat(parts.map((p) => typeof p === 'string' ? Buffer.from(p) : p));
+
+    const lipsyncRes = await fetch(`${LIPSYNC_API}/lipsync`, {
+      method: 'POST',
+      headers: { 'Content-Type': `multipart/form-data; boundary=${boundary}` },
+      body,
+    });
+
+    if (!lipsyncRes.ok) {
+      console.warn('Lipsync service returned', lipsyncRes.status);
+      return null;
+    }
+
+    const result = await lipsyncRes.json();
+    // Rewrite local video URL to public Cloudflare tunnel URL
+    if (result.video_path && LIPSYNC_VIDEO_BASE) {
+      const filename = result.video_path.split('/').pop();
+      return `${LIPSYNC_VIDEO_BASE}/outputs/video/${filename}`;
+    }
+    return null;
+  } catch (err) {
+    console.warn('Lipsync generation failed, falling back to audio:', err.message);
+    return null;
+  }
+}
+
 // Events just accumulate until the driver starts a shift coaching session
 export const onSafetyEvent = onDocumentCreated(
   { document: 'events/{eventId}', region: 'us-central1' },
@@ -60,9 +115,10 @@ export const beginCoaching = onCall(
       ? await generateShiftCoachingScript(events, aceContext)
       : await generatePositiveCoachingScript(driverName || 'Driver');
 
-    // 4. Synthesize TTS for the initial message
+    // 4. Synthesize TTS and generate lipsync video
     const sessionId = `shift_${Date.now()}`;
     const audioUrl = await synthesizeSpeech(script.initialMessage, sessionId);
+    const videoUrl = await generateLipsyncVideo(audioUrl);
 
     // 5. Compute shift period
     const timestamps = events
@@ -94,6 +150,7 @@ export const beginCoaching = onCall(
           speaker: 'geoff',
           text: script.initialMessage,
           audioUrl,
+          videoUrl: videoUrl || null,
           timestamp: Timestamp.now(),
         },
       ],
@@ -148,8 +205,9 @@ export const driverRespond = onCall(
       sessionData.eventSummaries || null
     );
 
-    // Synthesize response audio
+    // Synthesize response audio and generate lipsync video
     const audioUrl = await synthesizeSpeech(response.message, `${sessionId}_${Date.now()}`);
+    const videoUrl = await generateLipsyncVideo(audioUrl);
 
     // Add Geoff's reply
     await sessionRef.update({
@@ -157,6 +215,7 @@ export const driverRespond = onCall(
         speaker: 'geoff',
         text: response.message,
         audioUrl,
+        videoUrl: videoUrl || null,
         timestamp: Timestamp.now(),
       }),
     });
@@ -179,7 +238,7 @@ export const driverRespond = onCall(
       await sessionRef.update({ status: 'escalated' });
     }
 
-    return { message: response.message, audioUrl };
+    return { message: response.message, audioUrl, videoUrl: videoUrl || null };
   }
 );
 
