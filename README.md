@@ -6,11 +6,32 @@
 
 **Geoff coaches every driver, after every shift, about every safety event.** Not with a report. Not with an email. With a real conversation.
 
+**Live demo:** [geotab-geoff.web.app](https://geotab-geoff.web.app)
+
+---
+
+## The Problem
+
 Fleet safety managers are responsible for coaching hundreds — sometimes thousands — of drivers. But real coaching takes time: a one-on-one conversation about what happened on the road today. Most fleets can only coach a fraction of their drivers, usually after something's already gone wrong. The rest get a report they never read.
 
-Geoff changes that. He's an AI-powered coaching avatar that reviews a driver's entire shift, identifies patterns in the data, and has a two-way voice conversation about what happened — then escalates to a human supervisor only when it matters.
+Most fleet safety tools try to solve this by building better scoreboards — gathering data, ranking drivers, and telling supervisors where to focus. That helps prioritize, but it doesn't scale. The supervisor is still the bottleneck. A safety manager coaching 5-10 drivers per week out of 200 is doing triage, not coaching.
 
-**Live demo:** [geotab-geoff.web.app](https://geotab-geoff.web.app)
+## The Insight: What Speech Analytics Did for Contact Centers
+
+Contact centers had the same structural problem. QA analysts could manually review 8-20 calls per day. With thousands of daily interactions, only **1-2% of calls were ever monitored** — [98% went completely unreviewed](https://www.ringcentral.com/us/en/blog/ai-quality-management-why-your-contact-center-cant-rely-only-on-manual-qa-anymore/). Feedback was delayed, decontextualized, and based on random samples.
+
+Speech analytics changed everything. **100% of calls got analyzed automatically.** [QA staff was cut in half](https://callminer.com/blog/how-speech-analytics-can-reduce-costs-improve-contact-center-efficiency-case-study-examples) — and the remaining staff shifted from listening to calls to coaching agents on flagged interactions. The results:
+
+- [HomeServe/Verint](https://www.verint.com/case-studies/homeserve-reduces-customer-effort/): 22% CSAT increase, **GBP 5M+ savings over 6 years**
+- [Elavon](https://www.callcentrehelper.com/speech-analytics-where-is-the-best-return-on-investment-25773.htm): **$1.7M revenue retained in one quarter**
+- Industry-wide: [15-25% customer satisfaction improvement](https://www.qevalpro.com/blog/agent-performance-management-kpis-proven-strategies/), [35% faster agent improvement cycles](https://www.qevalpro.com/blog/agent-performance-management-kpis-proven-strategies/)
+- Gartner predicts conversational AI in contact centers will [reduce agent labor costs by $80 billion by 2026](https://www.gartner.com/en/newsroom/press-releases/2022-08-31-gartner-predicts-conversational-ai-will-reduce-contac)
+
+## Geoff Is Speech Analytics for Fleet Safety
+
+Geoff isn't a scoreboard that tells supervisors where to coach. **Geoff does the coaching.** Every driver, every shift, 100% coverage — the same leap from 1-2% to 100% that transformed contact centers. Supervisors don't review events; they handle the exceptions Geoff flags.
+
+The result: every driver gets coached, every shift gets reviewed, and your safety team focuses on the cases that truly need a human touch.
 
 ---
 
@@ -21,11 +42,9 @@ Geoff changes that. He's an AI-powered coaching avatar that reviews a driver's e
 3. **Shift-level analysis** — not event-by-event alerts. GPS clustering detects location patterns (e.g., four speeding events at the same intersection = a signage problem, not a driver problem)
 4. **Gemini 2.0 Flash** generates a personalized coaching script for the driver's specific shift
 5. **Cloud Text-to-Speech** synthesizes the script into natural speech
-6. **Wav2Lip on GPU** generates a lip-synced video of Geoff delivering the coaching
+6. **Wav2Lip on Cloud Run GPU** generates a lip-synced video of Geoff delivering the coaching
 7. **The driver talks back** — voice or text input drives a multi-turn conversation with Gemini
 8. **Escalation system** evaluates every response against 7 safety triggers (road rage, impairment, intentional violations, hostility, vehicle defects, data severity, driver requests). Flagged sessions go to the supervisor action queue with full context
-
-Think of it like speech analytics in a contact center. Geoff is the AI layer that coaches every driver, every shift. Human supervisors see only the sessions that need their attention.
 
 ---
 
@@ -78,7 +97,8 @@ Think of it like speech analytics in a contact center. Geoff is the AI layer tha
 │  │   └── geotabAuth — MyGeotab session → Firebase token       │
 │  ├── Firestore (drivers, events, sessions, actions)           │
 │  ├── Cloud Storage (audio, video, avatar assets)              │
-│  └── Vertex AI — Gemini 2.0 Flash                             │
+│  ├── Vertex AI — Gemini 2.0 Flash                             │
+│  └── Cloud Run + NVIDIA L4 GPU (Wav2Lip lipsync, us-east4)   │
 │                                                               │
 │  GEOTAB APIs                                                  │
 │  ├── MyGeotab API (mg-api-js SDK v3.0.0)                      │
@@ -102,7 +122,7 @@ Think of it like speech analytics in a contact center. Geoff is the AI layer tha
 | AI Coach | Gemini 2.0 Flash via Vertex AI |
 | Text-to-Speech | Google Cloud TTS Neural2-D |
 | Speech-to-Text | Google Cloud Speech-to-Text |
-| Lip Sync | Wav2Lip on GPU compute |
+| Lip Sync | Wav2Lip on Cloud Run with NVIDIA L4 GPU |
 | Geotab API | mg-api-js SDK v3.0.0 |
 | Fleet Analytics | OData Data Connector |
 | MCP Server | Python + FastMCP |
