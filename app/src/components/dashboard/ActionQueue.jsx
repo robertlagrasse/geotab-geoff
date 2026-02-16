@@ -74,41 +74,102 @@ export default function ActionQueue({ actions, sessions }) {
   const lat = location?.latitude || location?.lat;
   const lng = location?.longitude || location?.lng || location?.lon;
 
+  const typeIcon = (type) => {
+    switch (type) {
+      case 'safety_concern': return '\u26A0';
+      case 'training_referral': return '\uD83D\uDCCB';
+      case 'immediate_action': return '\uD83D\uDEA8';
+      case 'performance_review': return '\uD83D\uDCC8';
+      default: return '\uD83D\uDD14';
+    }
+  };
+
+  const typeSeverity = (type) => {
+    switch (type) {
+      case 'immediate_action': return 'critical';
+      case 'safety_concern': return 'warning';
+      case 'training_referral': return 'info';
+      default: return 'info';
+    }
+  };
+
   return (
     <div className="action-queue">
       <h2>Supervisor Action Queue</h2>
       {actions.length === 0 ? (
         <p className="empty-state">No pending actions.</p>
       ) : (
-        actions.map((action) => (
-          <div key={action.id} className={`action-card ${expandedId === action.id ? 'expanded' : ''}`}>
+        actions.map((action) => {
+          const isExpanded = expandedId === action.id;
+          const severity = typeSeverity(action.type);
+          return (
+          <div key={action.id} className={`action-card ${isExpanded ? 'expanded' : ''} severity-${severity}`}>
             <div
               className="action-header"
-              onClick={() => setExpandedId(expandedId === action.id ? null : action.id)}
-              style={{ cursor: 'pointer' }}
+              onClick={() => setExpandedId(isExpanded ? null : action.id)}
             >
-              <span className="action-type">{action.type?.replace(/_/g, ' ')}</span>
-              <span className="driver-name">{action.driverName}</span>
-              <span className="timestamp">
-                {action.createdAt?.toDate?.()?.toLocaleString('en-US', {
-                  weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: true,
-                }) || ''}
-              </span>
+              <div className="action-header-left">
+                <span className={`action-type-badge severity-${severity}`}>
+                  <span className="action-type-icon">{typeIcon(action.type)}</span>
+                  {action.type?.replace(/_/g, ' ')}
+                </span>
+                <span className="driver-name">{action.driverName}</span>
+              </div>
+              <div className="action-header-right">
+                <span className="timestamp">
+                  {action.createdAt?.toDate?.()?.toLocaleString('en-US', {
+                    weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: true,
+                  }) || ''}
+                </span>
+                <span className={`action-chevron ${isExpanded ? 'open' : ''}`}>{'\u203A'}</span>
+              </div>
             </div>
 
             <div className="action-body">
               <p className="action-summary">{action.summary}</p>
-              <p className="coach-rationale">{action.coachRationale}</p>
               {action.driverInput && (
-                <p className="driver-input">
-                  <strong>Driver said:</strong> "{action.driverInput}"
-                </p>
+                <div className="driver-input">
+                  <span className="driver-input-label">Driver quote</span>
+                  <p>"{action.driverInput}"</p>
+                </div>
               )}
             </div>
 
+            {!isExpanded && (
+              <div className="action-footer-collapsed">
+                <div className="action-buttons-inline">
+                  <button
+                    className="approve-btn-sm"
+                    onClick={(e) => { e.stopPropagation(); handleResolve(action.id, 'reviewed'); }}
+                  >
+                    Mark Reviewed
+                  </button>
+                  <button
+                    className="deny-btn-sm"
+                    onClick={(e) => { e.stopPropagation(); handleResolve(action.id, 'dismissed'); }}
+                  >
+                    Dismiss
+                  </button>
+                </div>
+                <span
+                  className="action-expand-hint"
+                  onClick={() => setExpandedId(action.id)}
+                >
+                  Details
+                </span>
+              </div>
+            )}
+
             {/* Expanded detail view */}
-            {expandedId === action.id && sessionData && (
+            {isExpanded && sessionData && (
               <div className="action-detail">
+                {action.coachRationale && (
+                  <div className="action-rationale-box">
+                    <span className="rationale-label">Coach rationale</span>
+                    <p>{action.coachRationale}</p>
+                  </div>
+                )}
+
                 <div className="action-detail-columns">
                   {/* Left: Transcript */}
                   <div className="action-transcript-panel">
@@ -207,18 +268,9 @@ export default function ActionQueue({ actions, sessions }) {
                 </div>
               </div>
             )}
-
-            {/* Collapsed: just show a hint to click */}
-            {expandedId !== action.id && (
-              <div
-                className="action-expand-hint"
-                onClick={() => setExpandedId(action.id)}
-              >
-                View session details
-              </div>
-            )}
           </div>
-        ))
+          );
+        })
       )}
     </div>
   );

@@ -972,6 +972,22 @@ body {
 /* ============================
    Dashboard
    ============================ */
+/* Add-in container: scope dark theme when embedded in MyGeotab */
+#geoff-addin-root {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  color: var(--geoff-text);
+  background: linear-gradient(135deg, var(--geoff-dark) 0%, var(--geoff-navy) 100%);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+#geoff-addin-root *, #geoff-addin-root *::before, #geoff-addin-root *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 .dashboard {
   min-height: 100vh;
 }
@@ -1131,79 +1147,209 @@ body {
 .action-card {
   background: var(--geoff-surface);
   border: 1px solid var(--geoff-border);
-  border-left: 3px solid var(--geoff-yellow);
+  border-left: 4px solid var(--geoff-yellow);
   border-radius: var(--geoff-radius);
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 1rem;
-  transition: border-color 0.2s;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  transition: all 0.2s ease;
 }
+
+.action-card:hover:not(.expanded) {
+  background: var(--geoff-surface-hover);
+}
+
+.action-card.severity-critical { border-left-color: var(--geoff-red); }
+.action-card.severity-warning { border-left-color: var(--geoff-yellow); }
+.action-card.severity-info { border-left-color: var(--geoff-blue); }
 
 .action-card.expanded {
   border-color: var(--geoff-blue);
-  border-left-color: var(--geoff-blue);
+  border-left-width: 4px;
 }
+.action-card.expanded.severity-critical { border-left-color: var(--geoff-red); }
+.action-card.expanded.severity-warning { border-left-color: var(--geoff-yellow); }
 
 .action-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.75rem;
-  gap: 1rem;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.action-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.action-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
 }
 
 .action-header .timestamp {
   font-size: 0.75rem;
   color: var(--geoff-gray-500);
-  margin-left: auto;
+  white-space: nowrap;
 }
 
-.action-type {
-  font-size: 0.8rem;
+.action-chevron {
+  font-size: 1.25rem;
+  color: var(--geoff-gray-500);
+  transition: transform 0.2s ease;
+  line-height: 1;
+}
+.action-chevron.open { transform: rotate(90deg); }
+
+.action-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--geoff-yellow);
-  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.action-type-badge.severity-critical {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+.action-type-badge.severity-warning {
+  background: rgba(234, 179, 8, 0.15);
+  color: #facc15;
+}
+.action-type-badge.severity-info {
+  background: rgba(37, 99, 235, 0.15);
+  color: #60a5fa;
 }
 
-.driver-name { font-size: 0.9rem; color: var(--geoff-text-muted); }
+.action-type-icon { font-size: 0.85rem; }
+
+.driver-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--geoff-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 .action-body { margin-bottom: 0.5rem; }
 
-.coach-rationale {
-  font-size: 0.85rem;
-  color: var(--geoff-text-muted);
+.action-summary {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--geoff-gray-300);
   line-height: 1.5;
   margin-bottom: 0.5rem;
 }
 
 .driver-input {
-  font-size: 0.85rem;
+  font-size: 0.825rem;
   color: var(--geoff-text-muted);
-  padding: 0.5rem 0.75rem;
-  background: var(--geoff-gray-800);
-  border-radius: var(--geoff-radius-sm);
-  margin-bottom: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  background: var(--geoff-gray-900);
+  border-left: 2px solid var(--geoff-gray-600);
+  border-radius: 0 var(--geoff-radius-sm) var(--geoff-radius-sm) 0;
+  margin-bottom: 0;
 }
 
-.action-summary {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--geoff-blue-light);
+.driver-input .driver-input-label {
+  display: block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--geoff-gray-500);
   margin-bottom: 0.25rem;
+  font-weight: 600;
 }
+
+.driver-input p {
+  font-style: italic;
+  margin: 0;
+  color: var(--geoff-gray-300);
+}
+
+.action-footer-collapsed {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--geoff-gray-800);
+  margin-top: 0.65rem;
+}
+
+.action-buttons-inline {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.approve-btn-sm, .deny-btn-sm {
+  font-size: 0.75rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.approve-btn-sm {
+  background: var(--geoff-blue);
+  color: white;
+  border: none;
+}
+.approve-btn-sm:hover { filter: brightness(1.15); }
+
+.deny-btn-sm {
+  background: transparent;
+  color: var(--geoff-gray-400);
+  border: 1px solid var(--geoff-gray-700);
+}
+.deny-btn-sm:hover { border-color: var(--geoff-red); color: var(--geoff-red); }
 
 .action-expand-hint {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--geoff-gray-500);
   cursor: pointer;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--geoff-gray-800);
   transition: color 0.15s;
 }
 
 .action-expand-hint:hover { color: var(--geoff-blue-light); }
 
 /* Expanded action detail */
+.action-rationale-box {
+  background: var(--geoff-gray-900);
+  border: 1px solid var(--geoff-gray-700);
+  border-radius: var(--geoff-radius-sm);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.action-rationale-box .rationale-label {
+  display: block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--geoff-gray-500);
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+}
+
+.action-rationale-box p {
+  font-size: 0.85rem;
+  color: var(--geoff-text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
 .action-detail {
   margin-top: 1rem;
   padding-top: 1rem;
@@ -1258,6 +1404,7 @@ body {
   border-radius: var(--geoff-radius-sm);
   font-weight: 500;
   cursor: pointer;
+  transition: filter 0.15s;
 }
 
 .approve-btn:hover { filter: brightness(1.1); }
@@ -1269,6 +1416,7 @@ body {
   border: 1px solid var(--geoff-border);
   border-radius: var(--geoff-radius-sm);
   cursor: pointer;
+  transition: all 0.15s;
 }
 
 .deny-btn:hover { border-color: var(--geoff-red); color: var(--geoff-red); }

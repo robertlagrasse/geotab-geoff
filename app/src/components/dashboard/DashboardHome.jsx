@@ -7,13 +7,15 @@ import LiveFeed from './LiveFeed';
 import ActionQueue from './ActionQueue';
 import Analytics from './Analytics';
 
-export default function DashboardHome() {
-  const { userProfile } = useAuth();
+export default function DashboardHome({ addinMode = false }) {
+  const { user, userProfile } = useAuth();
   const [activeTab, setActiveTab] = useState('feed');
   const [sessions, setSessions] = useState([]);
   const [actions, setActions] = useState([]);
 
   useEffect(() => {
+    if (!user) return;
+
     const sessionsQuery = query(
       collection(db, 'sessions'),
       orderBy('createdAt', 'desc'),
@@ -38,7 +40,7 @@ export default function DashboardHome() {
       unsubSessions();
       unsubActions();
     };
-  }, []);
+  }, [user]);
 
   return (
     <div className="dashboard">
@@ -69,7 +71,7 @@ export default function DashboardHome() {
         </nav>
         <div className="user-info">
           <span>{userProfile?.name}</span>
-          <button onClick={() => signOut(auth)} className="logout-btn">Sign Out</button>
+          {!addinMode && <button onClick={() => signOut(auth)} className="logout-btn">Sign Out</button>}
         </div>
       </header>
 

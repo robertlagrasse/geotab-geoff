@@ -8,6 +8,7 @@ import { synthesizeSpeech } from './speech/tts.js';
 import { transcribeAudio } from './speech/stt.js';
 import { fetchSafetyEvents, queryAceContext } from './geotab/client.js';
 import { fetchFleetAnalytics } from './analytics/odata.js';
+import { exchangeGeotabSession } from './geotab/auth.js';
 
 initializeApp();
 
@@ -325,6 +326,12 @@ export const fleetAnalytics = onRequest(
       res.status(500).json({ error: err.message });
     }
   }
+);
+
+// Geotab session → Firebase custom token exchange (for MyGeotab Add-In)
+export const geotabAuth = onRequest(
+  { region: 'us-central1', cors: true },
+  exchangeGeotabSession
 );
 
 // Helper: sync unique drivers from events into Firestore drivers collection
