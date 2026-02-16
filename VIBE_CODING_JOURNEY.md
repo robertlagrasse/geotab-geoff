@@ -111,6 +111,26 @@ The lipsync service had been running on a local RTX 4060 Ti exposed via Cloudfla
 
 The existing Docker image was already in Artifact Registry from an earlier build attempt. Claude deployed it to Cloud Run in us-east4 with a single command, updated the backend to send audio and receive MP4 bytes (instead of the old tunnel URL-rewriting approach), and uploaded results to Cloud Storage. The entire migration — discovery, deployment, backend update, function redeploy — took about 15 minutes.
 
+### Lipsync Cold Start Optimization
+
+After deploying to Cloud Run, we discussed cold start latency. The frontend already hit `/health` on user login to wake the instance — but Claude pointed out this only handled the Cloud Run instance spin-up (~30-60s). The deeper problem: `app.py` shelled out to `python3 inference.py` as a **subprocess for every request**, meaning PyTorch, CUDA, and the 435MB model weights were loaded from scratch every single time.
+
+- Human: "These things spin down to zero instances when not in use. Cold start will be an issue. Did we add the warmup?"
+- Claude: "Already there — `/health` on login wakes the instance. But `/health` just returns ok. The model loads per-request because `run_wav2lip` shells out to a new subprocess every time."
+- Human: "How much acceleration from adding a `/warmup` endpoint?"
+- Claude: "Practically zero. The subprocess architecture doesn't share state between calls. A `/warmup` wouldn't help because the model is loaded fresh in every subprocess. What would actually help: refactoring to keep the model in-process."
+
+| | Subprocess (before) | In-process (after) |
+|---|---|---|
+| Cloud Run cold start | 30-60s | 30-60s |
+| Model load | ~8-10s **every request** | ~8-10s **once at startup** |
+| Per-request inference | ~5-15s | ~5-15s |
+| **Total subsequent requests** | **~15-25s** | **~5-15s** |
+
+Claude refactored `app.py` to load the Wav2Lip model, run face detection on `geoff.png`, and cache the face coordinates — all at module level during container startup. The model stays in GPU memory across requests. The face detection result is reused since Geoff's image never changes. Every request after startup skips ~8-10s of initialization and goes straight to inference.
+
+This is a good example of AI-human collaboration on performance optimization. The human identified the operational concern (cold starts). The AI diagnosed the root cause (subprocess architecture, not instance spin-up) and proposed the right fix (in-process model loading) instead of the obvious-but-wrong fix (warmup endpoint).
+
 ## What AI Couldn't Do
 
 **Run the GPU.** Wav2Lip requires an NVIDIA GPU. Claude configured the Docker container, API, and Cloud Run deployment, but the initial local GPU setup (RTX 4060 Ti, Cloudflare tunnel) required manual work. The migration to Cloud Run GPU was fully AI-driven.
