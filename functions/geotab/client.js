@@ -54,19 +54,25 @@ function getApi() {
   return api;
 }
 
-// Compute the effective lookup time for an event, accounting for multi-day durations
+// Parse a Geotab duration string (e.g. "21.04:46:21" or "0:00:02.5") into milliseconds
+function parseDurationMs(duration) {
+  if (!duration) return 0;
+  const dayMatch = duration.match(/^(\d+)\.(\d+):(\d+):(\d+)/);
+  if (dayMatch) {
+    return (parseInt(dayMatch[1]) * 86400 + parseInt(dayMatch[2]) * 3600 + parseInt(dayMatch[3]) * 60 + parseInt(dayMatch[4])) * 1000;
+  }
+  const timeMatch = duration.match(/^(\d+):(\d+):(\d+)/);
+  if (timeMatch) {
+    return (parseInt(timeMatch[1]) * 3600 + parseInt(timeMatch[2]) * 60 + parseInt(timeMatch[3])) * 1000;
+  }
+  return 0;
+}
+
+// For short events (< 1 hour), use activeFrom — that's when the violation happened.
+// For long events (multi-day Max Speed etc.), also use activeFrom — the end time
+// just gives current vehicle state, not the violation speed.
 function getEventLookupTime(event) {
   let lookupTime = new Date(event.activeFrom);
-  if (event.duration) {
-    const dayMatch = event.duration.match(/^(\d+)\./);
-    if (dayMatch && parseInt(dayMatch[1]) > 0) {
-      const parsed = event.duration.match(/^(\d+)\.(\d+):(\d+):(\d+)/);
-      if (parsed) {
-        const durationMs = (parseInt(parsed[1]) * 86400 + parseInt(parsed[2]) * 3600 + parseInt(parsed[3]) * 60 + parseInt(parsed[4])) * 1000;
-        lookupTime = new Date(lookupTime.getTime() + durationMs);
-      }
-    }
-  }
   return lookupTime;
 }
 

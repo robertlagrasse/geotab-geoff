@@ -161,7 +161,7 @@ export default function CoachingSession() {
 
   if (!session || authLoading) return <div className="loading">Loading session...</div>;
 
-  const isSessionActive = session.status === 'ready' || session.status === 'in_progress';
+  const isSessionActive = session.status === 'ready' || session.status === 'in_progress' || session.status === 'escalated';
   const eventSummaries = session.eventSummaries || [];
   const turnCount = session.transcript?.filter((t) => t.speaker === 'driver').length || 0;
 
@@ -373,7 +373,7 @@ export default function CoachingSession() {
                   <span className="detail-value">{Math.round(selectedEventData.rawData.speedLimit * 0.621371)} mph</span>
                 </div>
               )}
-              {selectedEventData.rawData?.speed > 0 && selectedEventData.rawData?.speedLimit > 0 && (
+              {selectedEventData.rawData?.speed > 0 && selectedEventData.rawData?.speedLimit > 0 && selectedEventData.rawData.speed > selectedEventData.rawData.speedLimit && (
                 <div className="detail-row">
                   <span className="detail-label">Over Limit</span>
                   <span className="detail-value" style={{ color: '#e74c3c', fontWeight: 600 }}>

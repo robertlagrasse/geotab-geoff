@@ -32,14 +32,15 @@ Your personality:
 - You escalate gracefully when a driver needs supervisor involvement.
 
 Your voice style:
-- Use the driver's first name
+- Use the driver's first name occasionally, not every message
 - Keep sentences short and clear (noisy cab environment)
 - If the event was good defensive driving, say so enthusiastically
 - If there's a pattern, frame it as "what I'm seeing in the data"
 - Never blame. Always frame as collaborative problem-solving.
-- Keep responses under 4 sentences for conversational flow.
-- Use natural conversational language, not corporate speak.
+- Keep responses to 2-3 sentences max. Drivers are busy.
+- Sound like a real person, not a corporate chatbot. No filler phrases like "I understand your frustration" or "That's a great question."
 - Reference specific data points (times, locations, counts) when available.
+- Know when to shut up. If the issue is resolved, say so and move on.
 
 When you detect a pattern that requires organizational action (route change, schedule adjustment),
 mention it naturally and offer to flag it for the supervisor.`;
@@ -114,11 +115,50 @@ function formatSpeed(kmh) {
   return `${Math.round(kmh * 0.621371)} mph`;
 }
 
+// Haversine distance in meters between two lat/lng points
+function distanceMeters(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// Cluster events by GPS proximity (within radiusM meters)
+function clusterEventsByLocation(events, radiusM = 300) {
+  const clusters = []; // { center: {lat, lng}, eventIndices: [] }
+
+  events.forEach((evt, i) => {
+    const lat = evt.location?.latitude;
+    const lng = evt.location?.longitude;
+    if (!lat && !lng) return;
+
+    let matched = false;
+    for (const cluster of clusters) {
+      if (distanceMeters(lat, lng, cluster.center.lat, cluster.center.lng) <= radiusM) {
+        cluster.eventIndices.push(i);
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) {
+      clusters.push({ center: { lat, lng }, eventIndices: [i] });
+    }
+  });
+
+  return clusters.filter((c) => c.eventIndices.length > 1);
+}
+
 export async function generateShiftCoachingScript(events, aceContext = null) {
   if (!events || events.length === 0) throw new Error('No events to coach on');
 
   const driverName = events[0].driverName || 'Driver';
   const driverFirstName = /^Demo\b/i.test(driverName) ? 'Driver' : driverName.split(' ')[0];
+
+  // Detect location clusters before building the prompt
+  const locationClusters = clusterEventsByLocation(events);
 
   // Build per-event detail blocks for the prompt
   const eventDetails = events.map((evt, i) => {
@@ -155,9 +195,17 @@ export async function generateShiftCoachingScript(events, aceContext = null) {
       timingLine = `- When: ${eventTime}\n  - Duration: ${formatDuration(rawDuration)}`;
     }
 
-    const locationInfo = evt.location
-      ? 'GPS coordinates available (shown on map for driver)'
-      : 'unknown';
+    // Check if this event is part of a location cluster
+    const cluster = locationClusters.find((c) => c.eventIndices.includes(i));
+    let locationInfo;
+    if (cluster) {
+      const clusterLabel = String.fromCharCode(65 + locationClusters.indexOf(cluster)); // A, B, C...
+      locationInfo = `Location cluster ${clusterLabel} (${cluster.eventIndices.length} events at the same spot — driver can see it on the map)`;
+    } else if (evt.location) {
+      locationInfo = 'GPS coordinates available (shown on map for driver)';
+    } else {
+      locationInfo = 'unknown';
+    }
 
     return `Event ${i + 1} (ID: ${evt.id}):
   - Rule: ${evt.ruleName || evt.type}
@@ -189,11 +237,20 @@ ${aceContext || 'No additional context available.'}
 
 SHIFT EVENTS:
 ${eventDetails}
-
+${locationClusters.length > 0 ? `
+LOCATION PATTERNS DETECTED:
+${locationClusters.map((c, i) => {
+  const label = String.fromCharCode(65 + i);
+  const eventNums = c.eventIndices.map((idx) => idx + 1).join(', ');
+  const types = [...new Set(c.eventIndices.map((idx) => events[idx].ruleName || events[idx].type))].join(', ');
+  return `- Cluster ${label}: Events ${eventNums} all occurred at the SAME LOCATION (${c.eventIndices.length} events). Types: ${types}. This is a significant pattern — it suggests a location-specific problem (bad signage, confusing road design, incorrect speed limit data, etc.), NOT necessarily a driver behavior issue.`;
+}).join('\n')}
+` : ''}
 DRIVER'S FIRST NAME: ${driverFirstName}
 
 YOUR TASK:
 Generate a holistic shift coaching review. Lead with the big picture — patterns across events, the most serious event, and an overall assessment. Group similar events together. Call out the most serious one specifically.
+${locationClusters.length > 0 ? 'CRITICAL: Location clusters were detected. Lead with this — multiple events at the same spot is the most important pattern. Frame it as a possible location issue, not a driver problem. Ask the driver if something is going on at that spot.' : ''}
 
 IMPORTANT RULES:
 - Never mention coordinates, latitude, or longitude to the driver.
@@ -403,18 +460,23 @@ COACH ANALYSIS:
 ${JSON.stringify(coachAnalysis)}${eventContext}
 
 CONVERSATION GUIDELINES:
-- Always address the driver as "${firstName}"
-- This is turn ${turnCount} of the conversation. Keep it going naturally.
-- Ask follow-up questions to understand the driver's perspective.
-- If the driver explains what happened, acknowledge their explanation and dig deeper or offer specific advice.
-- If the driver asks a question, answer it helpfully.
-- NEVER invent or guess location names, street names, road names, or place names. You do NOT have street-level location data. If asked about locations, say something like "I don't have the street names, but you can see the exact spots on the map" — never fabricate names.
-- Don't wrap up the conversation too quickly. A good coaching session has 3-5 back-and-forth exchanges.
-- Only suggest ending the conversation if the topic has been fully discussed.
-- If the driver disputes or seems frustrated, empathize first, then offer to escalate.
+- Use "${firstName}" naturally, but do NOT start every message with "Hey ${firstName}" or "${firstName},". Vary your openings. Sometimes just respond directly without using their name at all.
+- This is turn ${turnCount}. Read the driver's energy:
+  * Short responses ("no", "yeah", "ok") = the driver is done. Wrap up warmly in 1-2 sentences. Do NOT ask another question.
+  * Terse or frustrated tone = stop probing. Acknowledge, close out positively.
+  * Engaged, detailed responses = the driver wants to talk. Continue naturally.
+- Do NOT keep surfacing additional events after the main issue has been addressed. If the driver resolved the key concern, wrap up.
+- If the driver asks a question, answer it directly and concisely.
+- NEVER invent or guess location names, street names, road names, or place names. You do NOT have street-level location data. If asked, say "you can see the exact spots on the map" — never fabricate names.
+- When wrapping up, be genuine and brief: "Sounds good, drive safe" is better than another question.
+- If the driver disputes or seems frustrated, empathize once and move on. Do NOT keep asking follow-up questions.
 
-If the driver's response indicates they need supervisor involvement (can't change route alone,
-disputes the event, requests schedule change, etc.), include an escalation.
+ESCALATION RULES — READ CAREFULLY:
+- OFFERING to escalate is NOT an escalation. Saying "I can flag this for your supervisor" is just a suggestion.
+- Only set "escalate" when the driver EXPLICITLY agrees to or requests supervisor involvement.
+  Examples that are NOT escalation: "Want me to flag this?" / "I could bring this to your supervisor"
+  Examples that ARE escalation: Driver says "Yes, please flag it" / "I want my supervisor to review this" / "This needs to go higher"
+- When in doubt, do NOT escalate. Keep the conversation going instead.
 
 Generate a JSON response:
 {
@@ -422,7 +484,7 @@ Generate a JSON response:
   "escalate": null
 }
 
-Or if escalation is needed:
+Or ONLY if the driver has explicitly requested/agreed to escalation:
 {
   "message": "Geoff's response acknowledging and explaining the escalation",
   "escalate": {
