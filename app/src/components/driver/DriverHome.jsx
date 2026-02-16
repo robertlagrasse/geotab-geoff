@@ -141,8 +141,9 @@ export default function DriverHome() {
   return (
     <div className="driver-home">
       <header className="driver-header">
-        <h1>Geoff</h1>
+        <h1><span className="geotab-brand">Geotab</span> Geoff</h1>
         <div className="driver-info">
+          <span className="user-email">{user?.email}</span>
           <select
             className="driver-select"
             value={selectedDriver}

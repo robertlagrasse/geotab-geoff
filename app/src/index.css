@@ -132,12 +132,24 @@ body {
   color: var(--geoff-blue-light);
 }
 
+.driver-header h1 .geotab-brand {
+  color: #00843D;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
 .driver-info {
   display: flex;
   align-items: center;
   gap: 1rem;
   font-size: 0.875rem;
   color: var(--geoff-text-muted);
+}
+
+.user-email {
+  color: var(--geoff-text-muted);
+  font-size: 0.8rem;
+  opacity: 0.8;
 }
 
 .logout-btn {

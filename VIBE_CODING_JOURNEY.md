@@ -181,6 +181,16 @@ The fix was a one-line deletion. The video bytes were being generated, uploaded,
 
 This bug illustrates a subtlety of Cloud Storage access control that's easy to miss: when uniform bucket-level access is enabled, per-object ACL operations don't just become unnecessary — they actively fail. The E2E test from the CLI didn't catch it because it used `gcloud storage cp` (which doesn't call `makePublic`), while the Cloud Function did.
 
+### Full Demo Run
+
+After the fix, we cleared all Firestore data (sessions, events, actions, drivers) and re-polled Geotab — 90 fresh events loaded. Warmed the lipsync service, ran the app, and confirmed end-to-end: driver selects a shift, Geoff generates coaching with Gemini, synthesizes speech with Cloud TTS, generates lip-synced video on Cloud Run GPU, and plays it back in the browser. Working.
+
+### UI Polish: Geotab Branding and Google Auth Visibility
+
+- "Let's doll up the interface. Show my email address next to the dropdown. The name should be Geotab Geoff. Stick the Geotab logo to the left of Geoff."
+
+Updated the driver home header: "Geotab" in brand green (#00843D) followed by "Geoff" in the existing blue. Added the user's Google email address next to the driver dropdown — a small touch that makes the Google Auth integration immediately visible to judges.
+
 ## What AI Couldn't Do
 
 **Run the GPU.** Wav2Lip requires an NVIDIA GPU. Claude configured the Docker container, API, and Cloud Run deployment, but the initial local GPU setup (RTX 4060 Ti, Cloudflare tunnel) required manual work. The migration to Cloud Run GPU was fully AI-driven.
