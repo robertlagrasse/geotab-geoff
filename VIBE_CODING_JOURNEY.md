@@ -81,9 +81,39 @@ Claude built a 6-tool FastMCP server in Python: safety events, fleet KPIs, drive
 
 **Persona design.** Geoff's coaching personality — warm, data-informed, never punitive, celebrates good behavior — was refined through conversation. The escalation system's specific safety triggers (road rage language, impairment mentions, intentional violation admissions) came from discussing what a real fleet safety manager would need to know.
 
+## Day 3: Competition Analysis and Cloud Migration (Feb 16, evening)
+
+### Competitive Evaluation
+
+Asked Claude to evaluate the project against the official judging criteria. Claude fetched the competition guide, hackathon ideas doc, tutorial design doc (which contains the weighted scoring rubric), and the Luma registration page. The result was a gap analysis that identified three critical missing pieces: no root README, no documentation of the AI-assisted development process, and no license file.
+
+- "Thoroughly consult all sources in COMPETITION.md. Evaluate this project against the stated scoring criteria. Why do we win? Why do we lose?"
+
+The evaluation scored us 6.4/10 before fixes. The biggest insight: the "Vibe Factor" criterion (15% of score) requires documenting prompts used and the AI development journey — and we had nothing.
+
+### Force Multiplier Narrative
+
+The original README described Geoff as a coaching tool. But the real innovation is the structural shift: Geoff isn't a scoreboard that tells supervisors where to coach — **Geoff does the coaching directly**. This is the same leap speech analytics brought to contact centers.
+
+Claude researched contact center speech analytics ROI data and found the exact parallel:
+- Before speech analytics: QA analysts manually reviewed 1-2% of calls. 98% went unmonitored.
+- After: 100% automated analysis. QA staff cut in half. 15-25% customer satisfaction improvement.
+- Documented savings: HomeServe GBP 5M over 6 years, Elavon $1.7M in one quarter.
+
+This research reshaped the entire project narrative. We updated the README to lead with the business case, not the technology.
+
+### Cloud Run GPU Migration
+
+The lipsync service had been running on a local RTX 4060 Ti exposed via Cloudflare tunnel — fragile, requires manual setup, not reproducible. Claude checked GCP GPU quotas and discovered we already had NVIDIA L4 allocation in us-east4 (not us-central1 where we'd been looking).
+
+- "Check on GPU quota status"
+- Claude: "You already have GPU quota. Just not where you think. NVIDIA L4 in us-east4: 2 GPUs allocated."
+
+The existing Docker image was already in Artifact Registry from an earlier build attempt. Claude deployed it to Cloud Run in us-east4 with a single command, updated the backend to send audio and receive MP4 bytes (instead of the old tunnel URL-rewriting approach), and uploaded results to Cloud Storage. The entire migration — discovery, deployment, backend update, function redeploy — took about 15 minutes.
+
 ## What AI Couldn't Do
 
-**Run the GPU.** Wav2Lip requires an NVIDIA GPU. Claude configured the Docker container and API, but the actual hardware (RTX 4060 Ti) and Cloudflare tunnel setup required manual work.
+**Run the GPU.** Wav2Lip requires an NVIDIA GPU. Claude configured the Docker container, API, and Cloud Run deployment, but the initial local GPU setup (RTX 4060 Ti, Cloudflare tunnel) required manual work. The migration to Cloud Run GPU was fully AI-driven.
 
 **Geotab demo data.** Creating the demo database, understanding which events were available, and interpreting the telemetry required human domain judgment.
 
@@ -95,21 +125,20 @@ Claude built a 6-tool FastMCP server in Python: safety events, fleet KPIs, drive
 
 | Metric | Value |
 |--------|-------|
-| Total development time | ~20 hours across 2 days |
+| Total development time | ~24 hours across 3 days |
 | Lines of code (JS/JSX) | ~4,700 |
 | Lines of code (Python) | ~5,200 |
 | Cloud Functions | 7 deployed |
 | React components | 15 |
 | MCP tools | 6 |
 | Geotab API methods used | 6 (Get, ExceptionEvent, Driver, LogRecord, GetRoadMaxSpeeds, GetAceResults) |
-| GCP services | 8 (Vertex AI, Cloud TTS, Cloud STT, Firebase Auth, Hosting, Functions, Firestore, Cloud Storage) |
-| Git commits | 8 (large, feature-complete commits rather than incremental) |
+| GCP services | 9 (Vertex AI, Cloud TTS, Cloud STT, Firebase Auth, Hosting, Functions, Firestore, Cloud Storage, Cloud Run GPU) |
 
 ## Tools Used
 
 - **Claude Code** (Claude Opus) — primary development tool for all code, architecture, and documentation
 - **Gemini 2.0 Flash** — runtime AI for coaching generation and multi-turn conversation
 - **Google Cloud TTS** — voice synthesis
-- **Wav2Lip** — lip sync video generation
+- **Wav2Lip on Cloud Run** — lip sync video generation (NVIDIA L4 GPU, us-east4)
 - **Firebase CLI** — deployment
-- **Cloudflare Tunnel** — exposing local GPU to cloud functions
+- **gcloud CLI** — Cloud Run GPU deployment and quota management
