@@ -448,16 +448,26 @@ export async function continueConversation(transcript, coachAnalysis, driverName
       ).join('\n')}`
     : '';
 
+  // Pre-compute data severity signals so the model can't miss them
+  const eventCount = eventSummaries?.length || 0;
+  const highSeverityCount = eventSummaries?.filter((e) => e.severity === 'high').length || 0;
+  const dataSeverityNote = [];
+  if (eventCount >= 5) dataSeverityNote.push(`${eventCount} total events (THRESHOLD: 5+)`);
+  if (highSeverityCount >= 2) dataSeverityNote.push(`${highSeverityCount} high-severity events`);
+  const dataSeverityBlock = dataSeverityNote.length > 0
+    ? `\n\n⚠️ DATA SEVERITY ALERT: ${dataSeverityNote.join(', ')}. This ALONE requires escalation under trigger F.`
+    : '';
+
   const prompt = `${GEOFF_SYSTEM_PROMPT}
 
 Continue this coaching conversation with ${firstName}. They just responded.
-This is a shift-level coaching session covering multiple events.
+This is a shift-level coaching session covering ${eventCount} events.
 
 CONVERSATION SO FAR:
 ${conversationHistory}
 
 COACH ANALYSIS:
-${JSON.stringify(coachAnalysis)}${eventContext}
+${JSON.stringify(coachAnalysis)}${eventContext}${dataSeverityBlock}
 
 CONVERSATION GUIDELINES:
 - Use "${firstName}" naturally, but do NOT start every message with "Hey ${firstName}" or "${firstName},". Vary your openings. Sometimes just respond directly without using their name at all.
@@ -487,6 +497,10 @@ B. IMPAIRMENT: Did the driver mention alcohol, drugs, medication side effects, f
    If YES → MUST escalate with type "safety_concern"
 
 C. INTENTIONAL VIOLATIONS: Did the driver say they knowingly broke safety rules, don't care about limits, or plan to keep doing it?
+   Trigger phrases: "I'll keep doing what I'm doing", "no need to change", "everybody does it",
+   "I don't see the problem", "it's fine", "I'm not going to slow down", "that's just how I drive",
+   any statement indicating they will NOT change the unsafe behavior.
+   A driver who REFUSES to acknowledge or correct a documented safety violation is an intentional violator.
    If YES → MUST escalate with type "training_referral"
 
 D. HOSTILITY: Is the driver hostile, insulting, refusing to engage, or telling Geoff to shut up / go away / mind his own business? Check the FULL conversation history, not just the last message.
@@ -495,7 +509,8 @@ D. HOSTILITY: Is the driver hostile, insulting, refusing to engage, or telling G
 E. VEHICLE ISSUES: Did the driver report brake problems, steering issues, warning lights, or equipment failures?
    If YES → MUST escalate with type "vehicle_defect"
 
-F. DATA SEVERITY: Does the shift data show 15+ mph over the limit, 5+ events, or multiple high-severity events?
+F. DATA SEVERITY: This shift has ${eventCount} events. If that number is 5 or more, this flag is TRUE — no exceptions.
+   Also true if any event was 15+ mph over the limit, or there are 2+ high-severity events.
    If YES → MUST escalate with type "safety_concern"
 
 G. DRIVER REQUESTED: Did the driver explicitly ask for supervisor involvement?
