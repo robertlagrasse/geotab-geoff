@@ -54,7 +54,7 @@ async function generateLipsyncVideo(audioUrl) {
     const bucket = storage.bucket(LIPSYNC_BUCKET);
     const file = bucket.file(videoFilename);
     await file.save(videoBytes, { contentType: 'video/mp4' });
-    await file.makePublic();
+    // Bucket has uniform access with allUsers:objectViewer — no per-object ACL needed
     return `https://storage.googleapis.com/${LIPSYNC_BUCKET}/${videoFilename}`;
   } catch (err) {
     console.warn('Lipsync generation failed, falling back to audio:', err.message);

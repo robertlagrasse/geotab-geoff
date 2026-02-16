@@ -131,6 +131,56 @@ Claude refactored `app.py` to load the Wav2Lip model, run face detection on `geo
 
 This is a good example of AI-human collaboration on performance optimization. The human identified the operational concern (cold starts). The AI diagnosed the root cause (subprocess architecture, not instance spin-up) and proposed the right fix (in-process model loading) instead of the obvious-but-wrong fix (warmup endpoint).
 
+### Container Rebuild and Deployment
+
+Rebuilding the container with the refactored `app.py` required navigating Cloud Build quota restrictions. The first attempts failed:
+
+```
+ERROR: (gcloud.builds.submit) FAILED_PRECONDITION: due to quota restrictions,
+Cloud Build cannot run builds of this machine type in this region
+```
+
+Both default and `e2-highcpu-32` machine types were quota-restricted in us-central1. Claude tried us-east4 instead — the build succeeded in 12 minutes, producing a 6GB image with PyTorch, CUDA 12.1, and the Wav2Lip model weights baked in.
+
+Deployed to Cloud Run and verified:
+
+```
+$ curl -s https://lipsync-248120812416.us-east4.run.app/health
+{"status":"ok","model_loaded":true,"device":"cuda"}
+```
+
+### End-to-End Pipeline Validation
+
+With the new container live, we ran a full pipeline test simulating every step the backend takes:
+
+| Step | What | Result | Time |
+|------|------|--------|------|
+| 1 | Cloud TTS (text → MP3) | 77KB MP3 | ~1s |
+| 2 | Upload to Cloud Storage | `gs://geotab-geoff-assets/audio/` | <1s |
+| 3 | Download from Cloud Storage | 77KB, HTTP 200 | <1s |
+| 4 | Cloud Run `/lipsync` (MP3 → MP4) | 629KB MP4, HTTP 200 | **8.1s** |
+| 5 | Upload video to Cloud Storage | `gs://geotab-geoff-assets/lipsync/` | <1s |
+
+Output: 9.7s H.264 video at 1024x1536, 25fps with AAC audio. The cold start penalty (first request including TTS) was 26.6s. Warm subsequent requests: 8.1s for a 10-second video, 2.3s for a 2-second clip. The in-process model optimization was clearly working.
+
+### The makePublic Bug
+
+Everything tested clean from the CLI — but the app showed only the static Geoff image, no video. The human reported the issue. Claude checked Cloud Function logs:
+
+```
+Lipsync generation failed, falling back to audio: Cannot update access control
+for an object when uniform bucket-level access is enabled.
+```
+
+Root cause: `generateLipsyncVideo()` called `file.makePublic()` after uploading the video to Cloud Storage. But the bucket `geotab-geoff-assets` uses **uniform bucket-level access**, which prohibits per-object ACL changes. The irony: the bucket already had `allUsers:objectViewer` at the IAM level — every object was already public. The `makePublic()` call was both unnecessary and the thing breaking the pipeline.
+
+The fix was a one-line deletion. The video bytes were being generated, uploaded, and stored correctly — then the function threw on the redundant ACL call, caught the error, logged a warning, and returned `null` instead of the perfectly good video URL. A classic case of the error being in the cleanup, not the work.
+
+- Claude: removed `file.makePublic()`, redeployed functions
+- Human: "Boom! It's working."
+
+This bug illustrates a subtlety of Cloud Storage access control that's easy to miss: when uniform bucket-level access is enabled, per-object ACL operations don't just become unnecessary — they actively fail. The E2E test from the CLI didn't catch it because it used `gcloud storage cp` (which doesn't call `makePublic`), while the Cloud Function did.
+
 ## What AI Couldn't Do
 
 **Run the GPU.** Wav2Lip requires an NVIDIA GPU. Claude configured the Docker container, API, and Cloud Run deployment, but the initial local GPU setup (RTX 4060 Ti, Cloudflare tunnel) required manual work. The migration to Cloud Run GPU was fully AI-driven.
