@@ -15,10 +15,9 @@ initializeApp();
 const db = getFirestore();
 const storage = getStorage();
 
-// Lipsync service — local GPU exposed via Cloudflare tunnel
+// Lipsync service — Cloud Run with NVIDIA L4 GPU in us-east4
 const LIPSYNC_API = process.env.LIPSYNC_API_URL || '';
-const LIPSYNC_VIDEO_BASE = process.env.LIPSYNC_VIDEO_URL || '';
-const GEOFF_IMAGE_URL = 'https://storage.googleapis.com/geotab-geoff-assets/geoff.png';
+const LIPSYNC_BUCKET = 'geotab-geoff-assets';
 
 async function generateLipsyncVideo(audioUrl) {
   if (!LIPSYNC_API) return null;
@@ -29,18 +28,10 @@ async function generateLipsyncVideo(audioUrl) {
     if (!audioRes.ok) return null;
     const audioBuffer = await audioRes.arrayBuffer();
 
-    // Download geoff.png
-    const imgRes = await fetch(GEOFF_IMAGE_URL);
-    if (!imgRes.ok) return null;
-    const imgBuffer = await imgRes.arrayBuffer();
-
-    // Build multipart form data
+    // Send audio to Cloud Run lipsync service (geoff.png is baked into the container)
     const boundary = '----GeoffLipsync' + Date.now();
     const parts = [];
-
-    parts.push(`--${boundary}\r\nContent-Disposition: form-data; name="image"; filename="geoff.png"\r\nContent-Type: image/png\r\n\r\n`);
-    parts.push(Buffer.from(imgBuffer));
-    parts.push(`\r\n--${boundary}\r\nContent-Disposition: form-data; name="audio"; filename="speech.mp3"\r\nContent-Type: audio/mpeg\r\n\r\n`);
+    parts.push(`--${boundary}\r\nContent-Disposition: form-data; name="audio"; filename="speech.mp3"\r\nContent-Type: audio/mpeg\r\n\r\n`);
     parts.push(Buffer.from(audioBuffer));
     parts.push(`\r\n--${boundary}--\r\n`);
 
@@ -57,13 +48,14 @@ async function generateLipsyncVideo(audioUrl) {
       return null;
     }
 
-    const result = await lipsyncRes.json();
-    // Rewrite local video URL to public Cloudflare tunnel URL
-    if (result.video_path && LIPSYNC_VIDEO_BASE) {
-      const filename = result.video_path.split('/').pop();
-      return `${LIPSYNC_VIDEO_BASE}/outputs/video/${filename}`;
-    }
-    return null;
+    // Cloud Run returns raw MP4 bytes — upload to Cloud Storage
+    const videoBytes = Buffer.from(await lipsyncRes.arrayBuffer());
+    const videoFilename = `lipsync/video_${Date.now()}.mp4`;
+    const bucket = storage.bucket(LIPSYNC_BUCKET);
+    const file = bucket.file(videoFilename);
+    await file.save(videoBytes, { contentType: 'video/mp4' });
+    await file.makePublic();
+    return `https://storage.googleapis.com/${LIPSYNC_BUCKET}/${videoFilename}`;
   } catch (err) {
     console.warn('Lipsync generation failed, falling back to audio:', err.message);
     return null;
