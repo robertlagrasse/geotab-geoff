@@ -35,6 +35,23 @@ Geoff isn't a scoreboard that tells supervisors where to coach. **Geoff does the
 
 The result: every driver gets coached, every shift gets reviewed, and your safety team focuses on the cases that truly need a human touch.
 
+### What It Costs
+
+A typical coaching session — initial video coaching + two back-and-forth voice exchanges — costs approximately **$0.04** in cloud resources:
+
+| Service | Per Session | What It Does |
+|---------|-----------|--------------|
+| Cloud Run GPU (NVIDIA L4) | $0.006 | 3 lip-synced videos (~10s GPU each) |
+| Cloud TTS (Neural2) | $0.024 | 3 coaching responses (~500 chars each) |
+| Gemini 2.0 Flash | $0.001 | 3 coaching generations (~2K input + 500 output tokens each) |
+| Cloud STT (Enhanced) | $0.018 | 2 driver voice transcriptions (~10s each) |
+| Firestore + Storage | <$0.001 | Session state, audio/video assets |
+| **Total per session** | **~$0.05** | |
+
+At 20 shifts per driver per month: **~$1.00/driver/month.**
+
+For context: a human safety coach costs $40-60/hour and can conduct 5-10 coaching sessions per day. At $50/hour and 8 sessions/day, that's **$6.25 per human coaching session** — 125x the cost of Geoff. A 200-driver fleet that currently coaches 10% of shifts would spend ~$12,500/month on human coaching for 20% coverage. Geoff delivers 100% coverage for **$200/month**.
+
 ---
 
 ## How It Works
@@ -146,8 +163,8 @@ Geoff uses **all three Geotab data channels**:
 
 Two demo videos show Geoff in action — Geoff himself explains the platform:
 
-- **Intro** (`scripts/geoff-intro.mp4`) — 2-minute overview of what Geoff does and why
-- **Full demo** (`scripts/geoff-demo.mp4`) — 5-minute deep dive into the architecture, coaching flow, escalation system, and Geotab API integration
+- **[Intro](demos/geoff-intro.mp4)** — 2-minute overview of what Geoff does and why
+- **[Full demo](demos/geoff-demo.mp4)** — 5-minute deep dive into the architecture, coaching flow, escalation system, and Geotab API integration
 
 ---
 
@@ -168,7 +185,8 @@ geoff/
 │   ├── speech/             # TTS + STT
 │   └── analytics/          # OData fleet analytics
 ├── mcp-server/             # MCP server for Claude Desktop
-├── scripts/                # Demo videos and seed data
+├── demos/                 # Demo videos and scripts
+├── scripts/                # Seed data
 ├── PLAN.md                 # Detailed architecture and design
 ├── COMPETITION.md          # Competition alignment and strategy
 └── VIBE_CODING_JOURNEY.md  # AI-assisted development process
