@@ -191,6 +191,95 @@ After the fix, we cleared all Firestore data (sessions, events, actions, drivers
 
 Updated the driver home header: "Geotab" in brand green (#00843D) followed by "Geoff" in the existing blue. Added the user's Google email address next to the driver dropdown — a small touch that makes the Google Auth integration immediately visible to judges.
 
+## Day 4: Competition Optimization (Feb 16, late evening)
+
+### Systematic Gap Analysis
+
+The final phase was pure optimization — scoring the project against the official judging rubric and closing gaps methodically. The prompt that kicked it off:
+
+- "Read all of your memory files. Understand the rules of the contest. Evaluate our code against the rules. Score the project. Tell me why we win. Tell me why we lose."
+
+Claude produced a weighted gap analysis: Innovation 9.0, Technical 7.0, UX 6.5, Vibe 7.0, Business 9.0 — total 7.7/10. The conversation that followed was a series of human corrections and AI execution:
+
+**Human corrects AI on scope:** Claude recommended adding Geotab write operations and mid-conversation Ace queries to boost Innovation. The human pushed back:
+- "I don't think adding more features is the way forward right now. The rules specifically caution against this. We're going to stay limited in our scope and focused on iterative excellence."
+
+The human was right — the contest guide explicitly warns against over-engineering. Claude also incorrectly described Ace AI as a "one-shot" integration. The human corrected this: Ace context flows into `coachAnalysis` and `eventSummaries`, which persist through the entire multi-turn conversation. Not one-shot at all.
+
+**Test infrastructure from zero to complete in one prompt:**
+- "Do everything necessary to satisfy the testing requirements. Go!"
+
+Claude built the entire test infrastructure in a single pass: 31 backend tests (Node.js built-in test runner — zero dependencies), 4 React component tests (Vitest + Testing Library), GitHub Actions CI pipeline, CI badge in README, and fixed all lint errors. This is what vibe coding looks like at its best — the human says *what*, the AI figures out *how* and *how much*.
+
+**Human corrects AI on cold start assessment:** Claude flagged GPU cold start as a UX risk. The human corrected:
+- "You are wrong on cold start latency. We have accounted for that. We thump the container on user login and warm everything up explicitly. Besides, I'm the one driving the demo and shooting the video."
+
+Claude verified: two-layer warmup exists (module-level health ping on login + component-level check on mount), combined with in-process model caching. The risk was already mitigated. This is a pattern in the collaboration — the human maintains operational awareness of what's deployed and working, while the AI can lose track of features it implemented in earlier sessions.
+
+### Score Trajectory
+
+The gap analysis process moved the score from 7.7 → 8.5 across three focused hours:
+
+| Phase | Innovation | Technical | UX | Vibe | Business | Total |
+|-------|-----------|-----------|-----|------|----------|-------|
+| Before optimization | 8.5 | 7.0 | 6.5 | 7.0 | 9.0 | **7.7** |
+| After tests + CI | 9.0 | 8.5 | 7.0 | 8.5 | 9.0 | **8.4** |
+| After UX corrections | 9.0 | 8.5 | 7.5 | 8.5 | 9.0 | **8.5** |
+
+---
+
+## Git Commit History Analysis
+
+21 commits over 26 hours. Every line of code written through conversation with Claude.
+
+```
+Feb 15 17:10  bd6f115  Initial commit: Geotab Geoff AI coaching platform          [18,920 lines, 60 files]
+Feb 15 18:00  01d3650  Fix coaching conversation quality + location detection      [+101 -33, 3 files]
+Feb 15 19:55  163aa12  Add lipsync video, processing indicator, escalation         [+229 -28, 5 files]
+Feb 15 20:25  7b4126f  Strengthen escalation triggers                              [+18 -3, 1 file]
+Feb 15 22:33  ed2af09  Add Geoff intro demo video and script                       [+19, 2 files]
+Feb 16 07:32  2cdb067  Add competition demo video — Geoff explains the platform    [+27, 2 files]
+Feb 16 08:49  e8eaadc  Force Google account picker on sign-in                      [+1, 1 file]
+Feb 16 14:36  bcd29d5  Add MyGeotab Add-In for supervisor dashboard                [+624 -61, 15 files]
+Feb 16 14:57  0226538  Add README, vibe coding journey, MIT license                [+333, 3 files]
+Feb 16 15:28  18194b4  Reframe README with contact center ROI narrative            [+27 -7, 1 file]
+Feb 16 15:34  68b9c47  Migrate lipsync from local GPU to Cloud Run                 [+14 -21, 2 files]
+Feb 16 15:35  8cb99bd  Document Cloud Run GPU migration in journey                 [+35 -6, 1 file]
+Feb 16 15:44  2945ce7  Refactor lipsync: in-process model loading                  [+150 -23, 1 file]
+Feb 16 15:44  2115819  Document cold start optimization in journey                 [+20, 1 file]
+Feb 16 16:20  9cc4c5e  Fix lipsync video — remove makePublic on uniform bucket     [+51 -1, 2 files]
+Feb 16 16:48  11020e1  Add Geotab branding and user email to header                [+24 -1, 3 files]
+Feb 16 18:01  82226f1  Fix CSS not loading in MyGeotab, restyle with Zenith        [+577 -389, 6 files]
+Feb 16 18:17  e328c70  Add screenshots and MyGeotab PDFs                           [+1, 6 files]
+Feb 16 18:33  a428be9  Add competition scoring and gap analysis                    [+185, 1 file]
+Feb 16 18:43  71cc5aa  Add test suite (35 tests), CI pipeline, lint fixes          [+1704 -57, 19 files]
+Feb 16 18:48  01937d6  Update scoring: cold start mitigated, UX 7.0→7.5           [+10 -11, 1 file]
+```
+
+### Development Cadence
+
+| Phase | Time | Commits | Pattern |
+|-------|------|---------|---------|
+| **Foundation** (Feb 15, 5-6pm) | 50 min | 1 | Massive initial scaffold — 18,920 lines |
+| **Coaching quality** (Feb 15, 6-8pm) | 2.5 hr | 3 | Rapid iteration on core product |
+| **Demo content** (Feb 15-16 overnight) | 9 hr gap | 2 | Human-driven creative work |
+| **Integration burst** (Feb 16, 2-3pm) | 1 hr | 4 | MyGeotab Add-In + README + narrative reframe |
+| **Cloud migration** (Feb 16, 3-4pm) | 1 hr | 4 | GPU migration + optimization + bug fix |
+| **Polish** (Feb 16, 4-6pm) | 2 hr | 3 | Branding, CSS, screenshots |
+| **Competition prep** (Feb 16, 6-7pm) | 1 hr | 3 | Scoring, tests, CI |
+
+### What the History Shows
+
+**The AI is a force multiplier, not a replacement.** The 50-minute initial commit (18,920 lines) is only possible because Claude held the entire architecture in context — React app, Cloud Functions, Firestore schema, Geotab API integration, Gemini prompts — and generated everything coherently. A human writing that volume would take days. But the human directed every decision: what to build, what to prioritize, when to stop.
+
+**Iteration is fast and fearless.** Three commits in 2.5 hours refined the coaching engine from basic per-event alerts to shift-level holistic coaching with GPS clustering and escalation enforcement. When something isn't right, you just tell the AI what's wrong and it fixes it.
+
+**The human catches what the AI misses.** Multiple corrections during the competition optimization phase — the AI flagged risks that were already mitigated (cold start), recommended features the contest explicitly warns against (scope creep), and got the Ace AI integration wrong (described it as one-shot when it persists through conversation). The human's operational knowledge and judgment corrected the AI's analysis each time.
+
+**Documentation is nearly free.** 6 of 21 commits are pure documentation — README, journey, scoring, migration notes. When the AI can write docs from context it already holds, there's no excuse for an undocumented project.
+
+---
+
 ## What AI Couldn't Do
 
 **Run the GPU.** Wav2Lip requires an NVIDIA GPU. Claude configured the Docker container, API, and Cloud Run deployment, but the initial local GPU setup (RTX 4060 Ti, Cloudflare tunnel) required manual work. The migration to Cloud Run GPU was fully AI-driven.

@@ -11,9 +11,9 @@ Source: `TUTORIAL_DESIGN.md` lines 365-369, corroborated by `HACKATHON_IDEAS.md`
 | **Innovation** — Unique use of Geotab APIs | 30% | 9.0 | 2.70 |
 | **Technical Implementation** — Code quality, use of both APIs | 25% | 8.5 | 2.125 |
 | **User Experience** — Usability, design, accessibility | 20% | 7.5 | 1.50 |
-| **Vibe Factor** — Effective use of AI-assisted development | 15% | 8.5 | 1.275 |
+| **Vibe Factor** — Effective use of AI-assisted development | 15% | 9.0 | 1.35 |
 | **Business Impact** — Real-world applicability | 10% | 9.0 | 0.90 |
-| **TOTAL** | | | **8.5/10** |
+| **TOTAL** | | | **8.575/10** |
 
 ## Prizes
 
@@ -87,7 +87,7 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 
 ---
 
-## 4. Vibe Factor (15%) — Score: 8.5/10
+## 4. Vibe Factor (15%) — Score: 9.0/10
 
 ### What's Working
 
@@ -99,8 +99,8 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 
 ### Gaps to Close
 
-- [ ] **More specific prompt examples** from actual development sessions would strengthen the narrative.
-- [ ] **No git commit history analysis** showing AI-human collaboration cadence.
+- [x] ~~**More specific prompt examples** from actual development sessions would strengthen the narrative.~~ **DONE** — Day 4 section added with contest evaluation, scope correction, test infrastructure, and cold start correction prompts.
+- [x] ~~**No git commit history analysis** showing AI-human collaboration cadence.~~ **DONE** — Full 21-commit timeline with development cadence analysis and collaboration patterns.
 - [ ] **No before/after screenshots** showing iteration.
 
 ---
@@ -179,6 +179,6 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 
 | # | Action | Criterion | Impact |
 |---|--------|-----------|--------|
-| 8 | Add more prompt examples to VIBE_CODING_JOURNEY.md | Vibe Factor | Strengthens the AI development narrative |
+| 8 | ~~Add more prompt examples to VIBE_CODING_JOURNEY.md~~ | ~~Vibe Factor~~ | **DONE** — Day 4 section + git commit history analysis |
 | 9 | Basic mobile responsiveness for driver view | UX | Tablet-in-cab is a real use case |
 | 10 | Community engagement (forum post, shared skill, blog post) | Collaborative | Only matters if targeting the $2.5K collaborative prize |
