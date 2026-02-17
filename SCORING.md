@@ -1,5 +1,7 @@
 # Geotab Geoff — Competition Scoring & Gap Analysis
 
+> **Note:** This is the Day 4 iterative gap analysis (8.825/10) used to drive optimization. For the final comprehensive evaluation, see [EVALUATION.md](EVALUATION.md).
+
 > **Goal: Contest domination.** This document scores the project against official judging criteria, identifies every gap, and tracks fixes point by point.
 
 ## Official Judging Criteria

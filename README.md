@@ -129,11 +129,12 @@ For context: a human safety coach costs $40-60/hour. A typical coaching session 
 ┌──────────────────────────▼──────────────────────────────────┐
 │  GCP BACKEND                                                 │
 │  ├── Cloud Functions v2 (Node.js 20)                         │
-│  │   ├── pollGeotabEvents — Geotab API → Firestore           │
-│  │   ├── generateCoaching — Ace context + Gemini script       │
-│  │   ├── chat — multi-turn conversation with escalation       │
-│  │   ├── speak — Cloud TTS + Wav2Lip video generation         │
+│  │   ├── onSafetyEvent — Firestore trigger, auto-coaching     │
+│  │   ├── beginCoaching — Ace context + Gemini script          │
+│  │   ├── driverRespond — multi-turn conversation + escalation │
+│  │   ├── ttsProxy — Cloud TTS + Wav2Lip video generation      │
 │  │   ├── transcribe — Cloud Speech-to-Text                    │
+│  │   ├── pollGeotabEvents — Geotab API → Firestore            │
 │  │   ├── fleetAnalytics — OData Data Connector                │
 │  │   └── geotabAuth — MyGeotab session → Firebase token       │
 │  ├── Firestore (drivers, events, sessions, actions)           │
@@ -209,16 +210,12 @@ geoff/
 ├── mcp-server/             # MCP server for Claude Desktop
 ├── demos/                 # Demo videos and scripts
 ├── scripts/                # Seed data
-├── PLAN.md                 # Detailed architecture and design
-├── COMPETITION.md          # Competition alignment and strategy
 └── VIBE_CODING_JOURNEY.md  # AI-assisted development process
 ```
 
 ---
 
 ## Getting Started
-
-See [INSTANT_START_WITH_CLAUDE.md](INSTANT_START_WITH_CLAUDE.md) for a complete guide to running this project with Claude Code, including credentials setup and step-by-step prompts.
 
 ### Prerequisites
 - Node.js 20+
