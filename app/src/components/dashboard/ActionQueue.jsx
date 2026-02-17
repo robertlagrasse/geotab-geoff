@@ -10,7 +10,6 @@ export default function ActionQueue({ actions, sessions }) {
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [selectedEventData, setSelectedEventData] = useState(null);
 
-  // When an action is expanded, load its linked session
   useEffect(() => {
     if (!expandedId) {
       setSessionData(null);
@@ -22,7 +21,6 @@ export default function ActionQueue({ actions, sessions }) {
     const action = actions.find((a) => a.id === expandedId);
     if (!action?.sessionId) return;
 
-    // Try from already-loaded sessions first
     const cached = sessions?.find((s) => s.id === action.sessionId);
     if (cached) {
       setSessionData(cached);
@@ -30,7 +28,6 @@ export default function ActionQueue({ actions, sessions }) {
       return;
     }
 
-    // Otherwise listen to Firestore
     const unsubscribe = onSnapshot(doc(db, 'sessions', action.sessionId), (snapshot) => {
       if (snapshot.exists()) {
         const data = { id: snapshot.id, ...snapshot.data() };
@@ -43,7 +40,6 @@ export default function ActionQueue({ actions, sessions }) {
     return unsubscribe;
   }, [expandedId]);
 
-  // Load full event data when selected
   useEffect(() => {
     if (!selectedEventId) { setSelectedEventData(null); return; }
     const unsubscribe = onSnapshot(doc(db, 'events', selectedEventId), (snapshot) => {
@@ -74,22 +70,29 @@ export default function ActionQueue({ actions, sessions }) {
   const lat = location?.latitude || location?.lat;
   const lng = location?.longitude || location?.lng || location?.lon;
 
-  const typeIcon = (type) => {
+  const typeLabel = (type) => {
     switch (type) {
-      case 'safety_concern': return '\u26A0';
-      case 'training_referral': return '\uD83D\uDCCB';
-      case 'immediate_action': return '\uD83D\uDEA8';
-      case 'performance_review': return '\uD83D\uDCC8';
-      default: return '\uD83D\uDD14';
+      case 'safety_concern': return 'Safety Concern';
+      case 'training_referral': return 'Training Referral';
+      case 'immediate_action': return 'Immediate Action';
+      case 'performance_review': return 'Performance Review';
+      default: return 'Action Required';
     }
   };
 
-  const typeSeverity = (type) => {
+  const severityClass = (type) => {
     switch (type) {
       case 'immediate_action': return 'critical';
       case 'safety_concern': return 'warning';
-      case 'training_referral': return 'info';
       default: return 'info';
+    }
+  };
+
+  const severityDotColor = (sev) => {
+    switch (sev) {
+      case 'critical': return '#C51A11';
+      case 'warning': return '#CC8400';
+      default: return '#0078D3';
     }
   };
 
@@ -99,178 +102,150 @@ export default function ActionQueue({ actions, sessions }) {
       {actions.length === 0 ? (
         <p className="empty-state">No pending actions.</p>
       ) : (
-        actions.map((action) => {
-          const isExpanded = expandedId === action.id;
-          const severity = typeSeverity(action.type);
-          return (
-          <div key={action.id} className={`action-card ${isExpanded ? 'expanded' : ''} severity-${severity}`}>
-            <div
-              className="action-header"
-              onClick={() => setExpandedId(isExpanded ? null : action.id)}
-            >
-              <div className="action-header-left">
-                <span className={`action-type-badge severity-${severity}`}>
-                  <span className="action-type-icon">{typeIcon(action.type)}</span>
-                  {action.type?.replace(/_/g, ' ')}
-                </span>
-                <span className="driver-name">{action.driverName}</span>
-              </div>
-              <div className="action-header-right">
-                <span className="timestamp">
-                  {action.createdAt?.toDate?.()?.toLocaleString('en-US', {
-                    weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: true,
-                  }) || ''}
-                </span>
-                <span className={`action-chevron ${isExpanded ? 'open' : ''}`}>{'\u203A'}</span>
-              </div>
-            </div>
-
-            <div className="action-body">
-              <p className="action-summary">{action.summary}</p>
-              {action.driverInput && (
-                <div className="driver-input">
-                  <span className="driver-input-label">Driver quote</span>
-                  <p>"{action.driverInput}"</p>
-                </div>
-              )}
-            </div>
-
-            {!isExpanded && (
-              <div className="action-footer-collapsed">
-                <div className="action-buttons-inline">
-                  <button
-                    className="approve-btn-sm"
-                    onClick={(e) => { e.stopPropagation(); handleResolve(action.id, 'reviewed'); }}
+        <div className="feed-list">
+          {actions.map((action) => {
+            const isExpanded = expandedId === action.id;
+            const severity = severityClass(action.type);
+            return (
+              <div key={action.id} className={`feed-item ${isExpanded ? 'expanded' : ''}`}>
+                <div
+                  className="status-dot"
+                  style={{ backgroundColor: severityDotColor(severity) }}
+                />
+                <div className="feed-details">
+                  <div
+                    className="feed-header"
+                    onClick={() => setExpandedId(isExpanded ? null : action.id)}
+                    style={{ cursor: 'pointer' }}
                   >
-                    Mark Reviewed
-                  </button>
-                  <button
-                    className="deny-btn-sm"
-                    onClick={(e) => { e.stopPropagation(); handleResolve(action.id, 'dismissed'); }}
-                  >
-                    Dismiss
-                  </button>
-                </div>
-                <span
-                  className="action-expand-hint"
-                  onClick={() => setExpandedId(action.id)}
-                >
-                  Details
-                </span>
-              </div>
-            )}
-
-            {/* Expanded detail view */}
-            {isExpanded && sessionData && (
-              <div className="action-detail">
-                {action.coachRationale && (
-                  <div className="action-rationale-box">
-                    <span className="rationale-label">Coach rationale</span>
-                    <p>{action.coachRationale}</p>
+                    <strong>{action.driverName}</strong>
+                    <span className={`aq-badge aq-badge--${severity}`}>
+                      {typeLabel(action.type)}
+                    </span>
+                    <span className="timestamp">
+                      {action.createdAt?.toDate?.()?.toLocaleString('en-US', {
+                        weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: true,
+                      }) || ''}
+                    </span>
                   </div>
-                )}
+                  {!isExpanded && action.summary && (
+                    <div className="feed-summary">{action.summary}</div>
+                  )}
 
-                <div className="action-detail-columns">
-                  {/* Left: Transcript */}
-                  <div className="action-transcript-panel">
-                    <h3>Conversation</h3>
-                    <div className="action-transcript-scroll">
-                      {sessionData.transcript?.map((entry, i) => (
-                        <div key={i} className={`transcript-entry ${entry.speaker}`}>
-                          <strong>{entry.speaker === 'geoff' ? 'Geoff' : sessionData.driverName || 'Driver'}:</strong>
-                          <p>{entry.text}</p>
+                  {isExpanded && (
+                    <div className="aq-expanded">
+                      {action.driverInput && (
+                        <div className="aq-quote">
+                          <span className="aq-label">Driver said</span>
+                          <p>"{action.driverInput}"</p>
                         </div>
-                      ))}
-                    </div>
-                  </div>
+                      )}
 
-                  {/* Right: Map + Event List */}
-                  <div className="action-sidebar-panel">
-                    {hasLocation ? (
-                      <div className="event-map">
-                        <iframe
-                          title="Event location"
-                          src={`https://www.google.com/maps?q=${lat},${lng}&z=15&output=embed`}
-                          className="map-iframe"
-                          allowFullScreen
-                          loading="lazy"
-                          referrerPolicy="no-referrer-when-downgrade"
-                        />
-                      </div>
-                    ) : (
-                      <div className="event-map no-location">
-                        <p>{selectedEventId ? 'No location data' : 'Select an event'}</p>
-                      </div>
-                    )}
+                      {action.coachRationale && (
+                        <div className="aq-rationale">
+                          <span className="aq-label">Coach rationale</span>
+                          <p>{action.coachRationale}</p>
+                        </div>
+                      )}
 
-                    {sessionData.eventSummaries?.length > 0 && (
-                      <div className="event-list-panel">
-                        <h3>Events ({sessionData.eventSummaries.length})</h3>
-                        <div className="event-list-scroll">
-                          {sessionData.eventSummaries.map((evt) => (
-                            <div
-                              key={evt.eventId}
-                              className={`event-list-item ${selectedEventId === evt.eventId ? 'selected' : ''}`}
-                              style={{ borderLeftColor: severityColor(evt.severity) }}
-                              onClick={() => setSelectedEventId(
-                                selectedEventId === evt.eventId ? null : evt.eventId
-                              )}
-                            >
-                              <div className="event-list-item-header">
-                                <span className="event-list-rule">{evt.ruleName || evt.type}</span>
-                                <span className="event-list-time">{evt.timestamp}</span>
+                      <div className="aq-actions">
+                        <button className="aq-btn aq-btn--primary" onClick={() => handleResolve(action.id, 'reviewed')}>
+                          Mark Reviewed
+                        </button>
+                        <button className="aq-btn aq-btn--secondary" onClick={() => handleResolve(action.id, 'dismissed')}>
+                          Dismiss
+                        </button>
+                      </div>
+
+                      {sessionData && (
+                        <div className="aq-detail">
+                          <div className="action-detail-columns">
+                            <div className="action-transcript-panel">
+                              <h3>Conversation</h3>
+                              <div className="action-transcript-scroll">
+                                {sessionData.transcript?.map((entry, i) => (
+                                  <div key={i} className={`transcript-entry ${entry.speaker}`}>
+                                    <strong>{entry.speaker === 'geoff' ? 'Geoff' : sessionData.driverName || 'Driver'}:</strong>
+                                    <p>{entry.text}</p>
+                                  </div>
+                                ))}
                               </div>
-                              <p className="event-list-oneliner">{evt.oneLiner}</p>
                             </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
 
-                    {/* Event details */}
-                    {selectedEventData && (
-                      <div className="event-details">
-                        <h3>Event Details</h3>
-                        <div className="detail-row">
-                          <span className="detail-label">Rule</span>
-                          <span className="detail-value">{selectedEventData.ruleName || selectedEventData.type}</span>
-                        </div>
-                        {selectedEventData.rawData?.speed > 0 && (
-                          <div className="detail-row">
-                            <span className="detail-label">Speed</span>
-                            <span className="detail-value">{Math.round(selectedEventData.rawData.speed * 0.621371)} mph</span>
-                          </div>
-                        )}
-                        {selectedEventData.rawData?.speedLimit > 0 && (
-                          <div className="detail-row">
-                            <span className="detail-label">Speed Limit</span>
-                            <span className="detail-value">{Math.round(selectedEventData.rawData.speedLimit * 0.621371)} mph</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                            <div className="action-sidebar-panel">
+                              {hasLocation ? (
+                                <div className="event-map">
+                                  <iframe
+                                    title="Event location"
+                                    src={`https://www.google.com/maps?q=${lat},${lng}&z=15&output=embed`}
+                                    className="map-iframe"
+                                    allowFullScreen
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                  />
+                                </div>
+                              ) : (
+                                <div className="event-map no-location">
+                                  <p>{selectedEventId ? 'No location data' : 'Select an event'}</p>
+                                </div>
+                              )}
 
-                <div className="action-buttons">
-                  <button
-                    className="approve-btn"
-                    onClick={() => handleResolve(action.id, 'reviewed')}
-                  >
-                    Mark Reviewed
-                  </button>
-                  <button
-                    className="deny-btn"
-                    onClick={() => handleResolve(action.id, 'dismissed')}
-                  >
-                    Dismiss
-                  </button>
+                              {sessionData.eventSummaries?.length > 0 && (
+                                <div className="event-list-panel">
+                                  <h3>Events ({sessionData.eventSummaries.length})</h3>
+                                  <div className="event-list-scroll">
+                                    {sessionData.eventSummaries.map((evt) => (
+                                      <div
+                                        key={evt.eventId}
+                                        className={`event-list-item ${selectedEventId === evt.eventId ? 'selected' : ''}`}
+                                        style={{ borderLeftColor: severityColor(evt.severity) }}
+                                        onClick={() => setSelectedEventId(
+                                          selectedEventId === evt.eventId ? null : evt.eventId
+                                        )}
+                                      >
+                                        <div className="event-list-item-header">
+                                          <span className="event-list-rule">{evt.ruleName || evt.type}</span>
+                                          <span className="event-list-time">{evt.timestamp}</span>
+                                        </div>
+                                        <p className="event-list-oneliner">{evt.oneLiner}</p>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {selectedEventData && (
+                                <div className="event-details">
+                                  <h3>Event Details</h3>
+                                  <div className="detail-row">
+                                    <span className="detail-label">Rule</span>
+                                    <span className="detail-value">{selectedEventData.ruleName || selectedEventData.type}</span>
+                                  </div>
+                                  {selectedEventData.rawData?.speed > 0 && (
+                                    <div className="detail-row">
+                                      <span className="detail-label">Speed</span>
+                                      <span className="detail-value">{Math.round(selectedEventData.rawData.speed * 0.621371)} mph</span>
+                                    </div>
+                                  )}
+                                  {selectedEventData.rawData?.speedLimit > 0 && (
+                                    <div className="detail-row">
+                                      <span className="detail-label">Speed Limit</span>
+                                      <span className="detail-value">{Math.round(selectedEventData.rawData.speedLimit * 0.621371)} mph</span>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
-            )}
-          </div>
-          );
-        })
+            );
+          })}
+        </div>
       )}
     </div>
   );

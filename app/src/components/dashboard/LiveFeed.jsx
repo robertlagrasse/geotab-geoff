@@ -3,11 +3,11 @@ import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase';
 
 const statusColors = {
-  completed: 'green',
-  in_progress: 'blue',
-  escalated: 'yellow',
-  disputed: 'red',
-  ready: 'gray',
+  completed: '#2B6436',
+  in_progress: '#0078D3',
+  escalated: '#CC8400',
+  disputed: '#C51A11',
+  ready: '#8DA4B9',
 };
 
 export default function LiveFeed({ sessions }) {

@@ -11,11 +11,16 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const addinDist = resolve(__dirname, '..', 'dist-addin');
 const mainDist = resolve(__dirname, '..', 'dist');
 
-// Copy the IIFE JS and CSS to dist root
-copyFileSync(resolve(addinDist, 'app.iife.js'), resolve(mainDist, 'addin.js'));
+// Read CSS and JS from addin build
 const css = readFileSync(resolve(addinDist, 'addin.css'), 'utf-8');
+const js = readFileSync(resolve(addinDist, 'app.iife.js'), 'utf-8');
 
-// Build addin.html with relative path (no leading slash!) to avoid MyGeotab double-slash bug
+// Prepend CSS injection to JS bundle — MyGeotab drops <head> (and its <style> tag)
+// when injecting add-in HTML into its DOM, so CSS must be delivered via JS.
+const cssInjector = `(function(){var s=document.createElement('style');s.id='geoff-addin-styles';s.textContent=${JSON.stringify(css)};(document.head||document.documentElement).appendChild(s);})();\n`;
+writeFileSync(resolve(mainDist, 'addin.js'), cssInjector + js);
+
+// Build addin.html — CSS also in <style> for direct-browser access
 const html = `<!doctype html>
 <html lang="en">
 <head>
