@@ -22,7 +22,7 @@ const GeoffAvatar = forwardRef(function GeoffAvatar({ onReady }, ref) {
         .catch(() => {});
     }
     onReady?.();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Clean up object URLs on unmount
   useEffect(() => {

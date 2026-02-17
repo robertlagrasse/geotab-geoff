@@ -17,7 +17,7 @@ function geoffInitialize(api, state, callback) {
   callback();
 }
 
-function geoffFocus(api, state) {
+function geoffFocus(api, _state) {
   console.log('[Geoff] focus called');
   window._geotabApi = api;
 

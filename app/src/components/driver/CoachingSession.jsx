@@ -61,7 +61,7 @@ export default function CoachingSession() {
       setPhraseIndex((i) => (i + 1) % drivingPhrases.length);
     }, 2500);
     return () => clearInterval(interval);
-  }, [isProcessing]);
+  }, [isProcessing]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Listen to session
   useEffect(() => {
@@ -92,7 +92,7 @@ export default function CoachingSession() {
     if (session?.eventSummaries?.length && !selectedEventId) {
       setSelectedEventId(session.eventSummaries[0].eventId);
     }
-  }, [session?.eventSummaries]);
+  }, [session?.eventSummaries]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-scroll transcript
   useEffect(() => {
@@ -190,7 +190,6 @@ export default function CoachingSession() {
   const turnCount = session.transcript?.filter((t) => t.speaker === 'driver').length || 0;
 
   // Determine map location — from selected event or first event with location
-  const selectedSummary = eventSummaries.find((e) => e.eventId === selectedEventId);
   const eventForMap = selectedEventData;
   const location = eventForMap?.location;
   const hasLocation = location && (location.latitude || location.lat);

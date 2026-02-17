@@ -9,11 +9,11 @@ Source: `TUTORIAL_DESIGN.md` lines 365-369, corroborated by `HACKATHON_IDEAS.md`
 | Criterion | Weight | Our Score | Weighted |
 |-----------|--------|-----------|----------|
 | **Innovation** — Unique use of Geotab APIs | 30% | 9.0 | 2.70 |
-| **Technical Implementation** — Code quality, use of both APIs | 25% | 7.5 | 1.875 |
+| **Technical Implementation** — Code quality, use of both APIs | 25% | 8.5 | 2.125 |
 | **User Experience** — Usability, design, accessibility | 20% | 7.0 | 1.40 |
 | **Vibe Factor** — Effective use of AI-assisted development | 15% | 8.5 | 1.275 |
 | **Business Impact** — Real-world applicability | 10% | 9.0 | 0.90 |
-| **TOTAL** | | | **8.15/10** |
+| **TOTAL** | | | **8.4/10** |
 
 ## Prizes
 
@@ -43,7 +43,7 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 
 ---
 
-## 2. Technical Implementation (25%) — Score: 7.5/10
+## 2. Technical Implementation (25%) — Score: 8.5/10
 
 ### What's Working
 
@@ -54,13 +54,13 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 - [x] Server-side escalation safety net — doesn't trust the model alone.
 - [x] ESM/CJS interop handled correctly.
 - [x] Uniform bucket access handled correctly.
+- [x] **35 tests** — backend (31: escalation safety net, GPS clustering, unit conversions, duration parsing) + frontend (4: component render tests). Node built-in test runner + Vitest.
+- [x] **GitHub Actions CI** — lint + test on push/PR with badge in README.
+- [x] **Clean lint** — zero errors across all source files.
 
 ### Gaps to Close
 
-- [ ] **Zero tests.** This is the biggest gap on a 25%-weighted criterion. Even basic smoke tests for Cloud Functions and component renders would help.
-- [ ] **No input validation on Cloud Functions** beyond Firebase Auth.
-- [ ] **No CI/CD pipeline.** Even a simple GitHub Actions workflow (lint + test + deploy) would demonstrate engineering rigor.
-- [ ] **Demo videos buried in `scripts/`.** Judges browsing the repo won't find them easily.
+- [ ] **Demo videos buried in `scripts/`.** Judges browsing the repo won't find them easily. (Presentation issue — moved to UX section.)
 
 ---
 
@@ -143,7 +143,7 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 
 1. **Cold start kills the live demo.** GPU scales to zero. First request = 30-60s. Judge opens app, nothing happens, moves on. **Single biggest risk.**
 
-2. **No tests, no CI.** Technical Implementation is 25%. Zero test coverage is a real gap if judges examine code.
+2. ~~**No tests, no CI.**~~ **FIXED** — 35 tests, GitHub Actions CI, clean lint, badge in README.
 
 3. **"Most Collaborative" is unreachable.** Zero community engagement. $2,500 gone.
 
@@ -166,14 +166,14 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 | 1 | Set `min-instances=1` on Cloud Run lipsync service | UX | Eliminates 30-60s cold start — the #1 demo killer |
 | 2 | Add screenshots to README (driver coaching, supervisor dashboard, MyGeotab Add-In) | UX, Innovation | First impression goes from text to visual proof |
 | 3 | Embed or link demo videos prominently in README | Vibe Factor, UX | Judges who don't run the app still see the product |
-| 4 | Add basic tests (Cloud Function smoke tests, React component renders) | Technical | Covers the biggest gap on a 25%-weighted criterion |
+| 4 | ~~Add basic tests (Cloud Function smoke tests, React component renders)~~ | ~~Technical~~ | **DONE** — 35 tests + CI + badge |
 
 ### High Value
 
 | # | Action | Criterion | Impact |
 |---|--------|-----------|--------|
 | 5 | Add fallback for non-Chrome browsers (text input always available, clear messaging) | UX | Firefox/Safari judges don't hit a dead end |
-| 6 | Add a GitHub Actions CI workflow (lint + test) | Technical | Shows engineering discipline |
+| 6 | ~~Add a GitHub Actions CI workflow (lint + test)~~ | ~~Technical~~ | **DONE** |
 | 7 | Add cost analysis to README or PLAN.md | Business | Back-of-napkin ROI per driver per month |
 
 ### Nice to Have

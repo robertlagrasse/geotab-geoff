@@ -1,5 +1,7 @@
 # Geotab Geoff — AI Fleet Safety Coach
 
+[![CI](https://github.com/robertlagrasse/geotab-geoff/actions/workflows/ci.yml/badge.svg)](https://github.com/robertlagrasse/geotab-geoff/actions/workflows/ci.yml)
+
 <p align="center">
   <img src="geoff.png" alt="Geoff — AI Fleet Safety Coach" width="300">
 </p>

@@ -25,7 +25,7 @@ export default function LiveFeed({ sessions }) {
       setSelectedEventId(null);
       setSelectedEventData(null);
     }
-  }, [expandedId]);
+  }, [expandedId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Load full event data when selected
   useEffect(() => {

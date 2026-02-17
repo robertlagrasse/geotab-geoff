@@ -46,7 +46,7 @@ When you detect a pattern that requires organizational action (route change, sch
 mention it naturally and offer to flag it for the supervisor.`;
 
 // Format duration from Geotab TimeSpan format "DD.HH:MM:SS.SSSSSSS" or "HH:MM:SS"
-function formatDuration(duration) {
+export function formatDuration(duration) {
   if (!duration) return 'brief';
 
   // Handle "DD.HH:MM:SS" format (days.hours:minutes:seconds)
@@ -80,7 +80,7 @@ function formatDuration(duration) {
 }
 
 // Parse Geotab duration string and return milliseconds
-function parseDurationMs(duration) {
+export function parseDurationMs(duration) {
   if (!duration) return 0;
   const dayMatch = duration.match(/^(\d+)\.(\d+):(\d+):(\d+)/);
   if (dayMatch) {
@@ -96,27 +96,27 @@ function parseDurationMs(duration) {
 }
 
 // Check if duration represents a multi-day monitoring period
-function isMultiDayDuration(duration) {
+export function isMultiDayDuration(duration) {
   if (!duration) return false;
   const dayMatch = duration.match(/^(\d+)\./);
   return dayMatch && parseInt(dayMatch[1]) > 0;
 }
 
 // Format distance from meters to miles
-function formatDistance(meters) {
+export function formatDistance(meters) {
   if (!meters || meters <= 0) return null;
   const miles = meters / 1609.344;
   return miles < 0.1 ? `${Math.round(meters)} meters` : `${miles.toFixed(1)} miles`;
 }
 
 // Format speed from km/h to mph
-function formatSpeed(kmh) {
+export function formatSpeed(kmh) {
   if (!kmh || kmh <= 0) return null;
   return `${Math.round(kmh * 0.621371)} mph`;
 }
 
 // Haversine distance in meters between two lat/lng points
-function distanceMeters(lat1, lon1, lat2, lon2) {
+export function distanceMeters(lat1, lon1, lat2, lon2) {
   const R = 6371000;
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
@@ -127,7 +127,7 @@ function distanceMeters(lat1, lon1, lat2, lon2) {
 }
 
 // Cluster events by GPS proximity (within radiusM meters)
-function clusterEventsByLocation(events, radiusM = 300) {
+export function clusterEventsByLocation(events, radiusM = 300) {
   const clusters = []; // { center: {lat, lng}, eventIndices: [] }
 
   events.forEach((evt, i) => {
@@ -548,12 +548,18 @@ CRITICAL: If any escalation_check flag is true but escalate is null, your respon
 
   const parsed = JSON.parse(jsonMatch[0]);
 
-  // Server-side safety net: if any escalation_check flag is true, force escalation
+  applyEscalationSafetyNet(parsed);
+  return parsed;
+}
+
+// Server-side safety net: if any escalation_check flag is true, force escalation
+// Exported for testing — this is the critical safety logic that must never fail
+export function applyEscalationSafetyNet(parsed) {
   const check = parsed.escalation_check;
   if (check && !parsed.escalate) {
     const triggered = Object.entries(check).filter(([, v]) => v === true);
     if (triggered.length > 0) {
-      console.warn(`[continueConversation] Model failed to escalate despite triggers: ${triggered.map(([k]) => k).join(', ')}. Forcing escalation.`);
+      console.warn(`[escalationSafetyNet] Model failed to escalate despite triggers: ${triggered.map(([k]) => k).join(', ')}. Forcing escalation.`);
       parsed.escalate = {
         type: 'safety_concern',
         details: `Auto-escalated: triggers fired (${triggered.map(([k]) => k).join(', ')}) but model did not escalate`,
@@ -561,6 +567,5 @@ CRITICAL: If any escalation_check flag is true but escalate is null, your respon
       };
     }
   }
-
   return parsed;
 }

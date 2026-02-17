@@ -6,6 +6,9 @@
   },
   "main": "index.js",
   "type": "module",
+  "scripts": {
+    "test": "node --test test/"
+  },
   "dependencies": {
     "@google-cloud/speech": "^6.0.0",
     "@google-cloud/text-to-speech": "^5.0.0",

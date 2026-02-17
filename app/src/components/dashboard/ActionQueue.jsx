@@ -38,7 +38,7 @@ export default function ActionQueue({ actions, sessions }) {
       }
     });
     return unsubscribe;
-  }, [expandedId]);
+  }, [expandedId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!selectedEventId) { setSelectedEventData(null); return; }

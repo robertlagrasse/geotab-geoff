@@ -27,7 +27,7 @@ function personalizeText(text, name) {
 
 
 export default function DriverHome() {
-  const { user, userProfile } = useAuth();
+  const { user } = useAuth();
   const [pendingEvents, setPendingEvents] = useState([]);
   const [sessions, setSessions] = useState([]);
   const [drivers, setDrivers] = useState([]);
@@ -51,7 +51,7 @@ export default function DriverHome() {
       }
     });
     return unsubscribe;
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Listen to pending events for the shift summary card
   useEffect(() => {
