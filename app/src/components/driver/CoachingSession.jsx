@@ -7,6 +7,7 @@ import { useAuth } from '../../hooks/useAuth.jsx';
 import GeoffAvatar from './GeoffAvatar';
 
 const driverRespondFn = httpsCallable(functions, 'driverRespond');
+const transcribeFn = httpsCallable(functions, 'transcribe');
 
 // Replace all "Demo" device name patterns with the given name
 function personalizeText(text, name) {
@@ -33,7 +34,8 @@ export default function CoachingSession() {
   const [initialSpoken, setInitialSpoken] = useState(false);
   const [showEndOptions, setShowEndOptions] = useState(false);
   const avatarRef = useRef(null);
-  const recognitionRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
   const transcriptEndRef = useRef(null);
 
   // The logged-in user's first name from Google
@@ -135,35 +137,60 @@ export default function CoachingSession() {
     }
   };
 
-  const toggleListening = () => {
+  // Server-side STT via MediaRecorder + Cloud Speech-to-Text
+  // Why not browser Web Speech API:
+  // - Chrome-only (no Firefox, Safari, Edge support)
+  // - Poor accuracy in noisy environments (truck cabs, loading docks)
+  // - Inconsistent accent handling across devices
+  // Cloud STT with enhanced model handles all of these.
+  const toggleListening = async () => {
     if (isListening) {
-      recognitionRef.current?.stop();
-      setIsListening(false);
+      mediaRecorderRef.current?.stop();
       return;
     }
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      alert('Voice input is not supported in this browser. Please use Chrome.');
-      return;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) audioChunksRef.current.push(e.data);
+      };
+
+      mediaRecorder.onstop = async () => {
+        stream.getTracks().forEach((t) => t.stop());
+        setIsListening(false);
+
+        const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        if (blob.size === 0) return;
+
+        // Transcribe server-side, then send the text through the normal flow
+        try {
+          const buffer = await blob.arrayBuffer();
+          const bytes = new Uint8Array(buffer);
+          let binary = '';
+          for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+          const base64 = btoa(binary);
+          setIsProcessing(true);
+          const result = await transcribeFn({ audio: base64 });
+          const transcript = result.data.transcript;
+          setIsProcessing(false);
+          if (transcript?.trim()) {
+            sendResponse(transcript);
+          }
+        } catch (err) {
+          console.error('Transcription failed:', err);
+          setIsProcessing(false);
+        }
+      };
+
+      mediaRecorderRef.current = mediaRecorder;
+      mediaRecorder.start();
+      setIsListening(true);
+    } catch (err) {
+      console.error('Microphone access denied:', err);
     }
-
-    const recognition = new SpeechRecognition();
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.lang = 'en-US';
-
-    recognition.onresult = (ev) => {
-      const transcript = ev.results[0][0].transcript;
-      sendResponse(transcript);
-    };
-
-    recognition.onerror = () => setIsListening(false);
-    recognition.onend = () => setIsListening(false);
-
-    recognitionRef.current = recognition;
-    recognition.start();
-    setIsListening(true);
   };
 
   const handleEndSession = async (outcomeType) => {

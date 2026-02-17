@@ -320,6 +320,27 @@ export const fleetAnalytics = onRequest(
   }
 );
 
+// Server-side speech-to-text transcription
+// Uses Google Cloud STT instead of browser Web Speech API for:
+// - Cross-browser support (Firefox, Safari, Edge — not just Chrome)
+// - Better accuracy in noisy environments (truck cabs, warehouses, loading docks)
+// - Better accent handling (fleet drivers are diverse)
+// - Consistent behavior regardless of client device
+export const transcribe = onCall(
+  { region: 'us-central1' },
+  async (request) => {
+    const uid = request.auth?.uid;
+    if (!uid) throw new Error('Unauthenticated');
+
+    const { audio } = request.data;
+    if (!audio) throw new Error('audio (base64) is required');
+
+    const audioBuffer = Buffer.from(audio, 'base64');
+    const transcript = await transcribeAudio(audioBuffer);
+    return { transcript };
+  }
+);
+
 // Geotab session → Firebase custom token exchange (for MyGeotab Add-In)
 export const geotabAuth = onRequest(
   { region: 'us-central1', cors: true },

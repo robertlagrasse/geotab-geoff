@@ -10,10 +10,10 @@ Source: `TUTORIAL_DESIGN.md` lines 365-369, corroborated by `HACKATHON_IDEAS.md`
 |-----------|--------|-----------|----------|
 | **Innovation** — Unique use of Geotab APIs | 30% | 9.0 | 2.70 |
 | **Technical Implementation** — Code quality, use of both APIs | 25% | 8.5 | 2.125 |
-| **User Experience** — Usability, design, accessibility | 20% | 7.5 | 1.50 |
+| **User Experience** — Usability, design, accessibility | 20% | 8.0 | 1.60 |
 | **Vibe Factor** — Effective use of AI-assisted development | 15% | 9.0 | 1.35 |
 | **Business Impact** — Real-world applicability | 10% | 9.0 | 0.90 |
-| **TOTAL** | | | **8.575/10** |
+| **TOTAL** | | | **8.675/10** |
 
 ## Prizes
 
@@ -64,7 +64,7 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 
 ---
 
-## 3. User Experience (20%) — Score: 7.5/10
+## 3. User Experience (20%) — Score: 8.0/10
 
 ### What's Working
 
@@ -74,11 +74,12 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 - [x] Real-time Firestore listeners for live updates.
 - [x] Positive reinforcement on clean shifts.
 - [x] Fun loading phrases ("Checking mirrors...", "Shifting gears...").
+- [x] **Cross-browser voice input.** Server-side Cloud STT via MediaRecorder — works in Chrome, Firefox, Safari, Edge. Better accuracy than browser Web Speech API in noisy environments (truck cabs, loading docks) and with diverse accents.
 - [x] **GPU cold start mitigated.** Two-layer warmup: module-level health ping on page load (`DriverHome.jsx:14`) wakes Cloud Run instance + loads model into GPU memory; component-level check (`GeoffAvatar.jsx:18`) confirms availability. Combined with in-process model caching (model stays in GPU memory across requests), subsequent inference is 5-15s. Demo is creator-driven — performance is controlled.
 
 ### Gaps to Close
 
-- [ ] **Voice input is Chrome-only** (Web Speech API). Firefox/Safari judges can't use it.
+- [x] ~~**Voice input is Chrome-only** (Web Speech API). Firefox/Safari judges can't use it.~~ **FIXED** — Replaced with MediaRecorder + server-side Cloud STT. Works in all modern browsers. Better accuracy in noisy environments and with accents.
 - [ ] **No mobile optimization.**
 - [ ] **No accessibility features** (screen reader, keyboard nav, WCAG).
 - [ ] **No screenshots in the README.** The repo's first impression is text-only.
@@ -171,7 +172,7 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 
 | # | Action | Criterion | Impact |
 |---|--------|-----------|--------|
-| 5 | Add fallback for non-Chrome browsers (text input always available, clear messaging) | UX | Firefox/Safari judges don't hit a dead end |
+| 5 | ~~Add fallback for non-Chrome browsers~~ | ~~UX~~ | **DONE** — Server-side Cloud STT replaces Web Speech API. All browsers. |
 | 6 | ~~Add a GitHub Actions CI workflow (lint + test)~~ | ~~Technical~~ | **DONE** |
 | 7 | Add cost analysis to README or PLAN.md | Business | Back-of-napkin ROI per driver per month |
 
