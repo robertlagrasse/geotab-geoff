@@ -6,7 +6,7 @@
   <img src="geoff.png" alt="Geoff — AI Fleet Safety Coach" width="300">
 </p>
 
-**Geoff coaches every driver, after every shift, about every safety event.** Not with a report. Not with an email. With a real conversation.
+**Geoff coaches every driver, after every shift, about every safety event.** Not with a report. Not with an email. With a face-to-face conversation delivered by a lip-synced AI avatar who knows what happened on the road today.
 
 **Demo video:** [Watch on YouTube](https://youtu.be/-KtFKp8wk-M)
 
@@ -38,6 +38,8 @@ Speech analytics changed everything. **100% of calls got analyzed automatically.
 
 Geoff isn't a scoreboard that tells supervisors where to coach. **Geoff does the coaching.** Every driver, every shift, 100% coverage — the same leap from 1-2% to 100% that transformed contact centers. Supervisors don't review events; they handle the exceptions Geoff flags.
 
+Most fleet safety tools present data and leave the coaching to humans. Geoff is a different category of product: an AI persona that watches your shift data, forms an opinion, looks you in the eye, and talks to you about it. The driver talks back, and the conversation adapts. That interaction — a face-to-face coaching session between a driver and an AI — doesn't exist in fleet management today.
+
 The result: every driver gets coached, every shift gets reviewed, and your safety team focuses on the cases that truly need a human touch.
 
 ### What It Costs
@@ -61,21 +63,25 @@ For context: a human safety coach costs $40-60/hour. A typical coaching session 
 
 ## How It Works
 
+The coaching pipeline chains Google Cloud AI services end-to-end — from fleet telemetry to a driver watching a personalized video of Geoff talking about their shift:
+
 1. **Geotab GO devices** record safety events in real time — speeding, harsh braking, aggressive acceleration
-2. **Geoff polls the Geotab API** using the official SDK, enriching each event with GPS coordinates, posted speed limits, and context from Geotab's Ace AI
+2. **Geoff polls the Geotab API** using the official SDK, enriching each event with GPS coordinates, posted speed limits, and context from Geotab's **Ace AI**
 3. **Shift-level analysis** — not event-by-event alerts. GPS clustering detects location patterns (e.g., four speeding events at the same intersection = a signage problem, not a driver problem)
-4. **Gemini 2.0 Flash** generates a personalized coaching script for the driver's specific shift
-5. **Cloud Text-to-Speech** synthesizes the script into natural speech
-6. **Wav2Lip on Cloud Run GPU** generates a lip-synced video of Geoff delivering the coaching
-7. **The driver talks back** — voice or text input drives a multi-turn conversation with Gemini
+4. **Gemini 2.0 Flash** (via **Vertex AI**) generates a personalized coaching script for the driver's specific shift
+5. **Cloud Text-to-Speech** (Neural2) synthesizes the script into natural speech
+6. **Wav2Lip on Cloud Run GPU** (NVIDIA L4) generates a lip-synced video of Geoff delivering the coaching
+7. **The driver talks back** — **Cloud Speech-to-Text** transcribes voice input, feeding a multi-turn conversation with Gemini
 8. **Escalation system** evaluates every response against 7 safety triggers (road rage, impairment, intentional violations, hostility, vehicle defects, data severity, driver requests). Flagged sessions go to the supervisor action queue with full context
+
+Every step — from intelligence to voice to video to transcription — runs on Google Cloud. **Firebase** (Auth, Hosting, Functions, Firestore, Cloud Storage) ties it all together.
 
 ---
 
 ## Features
 
 ### Driver Experience
-- Lip-synced avatar delivers coaching face-to-face, not as a wall of text
+- Lip-synced avatar delivers coaching face-to-face — not a chatbot, not a report, a character who talks to you
 - Two-way voice conversation — drivers respond naturally and Geoff adapts
 - End-of-shift holistic review with pattern detection across events
 - Positive reinforcement on clean shifts (not just silence)
