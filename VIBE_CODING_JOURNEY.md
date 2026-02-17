@@ -246,6 +246,7 @@ The gap analysis process moved the score from 7.7 → 8.675 across focused optim
 | After UX corrections | 9.0 | 8.5 | 7.5 | 8.5 | 9.0 | **8.5** |
 | After prompts + git analysis | 9.0 | 8.5 | 7.5 | 9.0 | 9.0 | **8.575** |
 | After server-side STT | 9.0 | 8.5 | 8.0 | 9.0 | 9.0 | **8.675** |
+| After cost analysis + demo move | 9.0 | 8.5 | 8.0 | 9.0 | 9.5 | **8.725** |
 
 ---
 
@@ -318,7 +319,7 @@ Feb 16 18:48  01937d6  Update scoring: cold start mitigated, UX 7.0→7.5       
 | Total development time | ~24 hours across 3 days |
 | Lines of code (JS/JSX) | ~4,700 |
 | Lines of code (Python) | ~5,200 |
-| Cloud Functions | 7 deployed |
+| Cloud Functions | 8 deployed |
 | React components | 15 |
 | MCP tools | 6 |
 | Geotab API methods used | 6 (Get, ExceptionEvent, Driver, LogRecord, GetRoadMaxSpeeds, GetAceResults) |
