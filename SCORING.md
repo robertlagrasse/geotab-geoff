@@ -23,7 +23,7 @@ Source: `TUTORIAL_DESIGN.md` lines 365-369, corroborated by `HACKATHON_IDEAS.md`
 |-------|-------|-------------|
 | **Vibe Master** | $10,000 | Strong contender — top-tier on Innovation + Business Impact |
 | **The Innovator** | $5,000 | Strongest candidate — nobody else is doing lip-synced avatar coaching |
-| **Most Collaborative** | $2,500 | Out of reach — zero community engagement |
+| **Most Collaborative** | $2,500 | Now competing — active Reddit community engagement, sharing architecture explainers and process videos |
 
 ---
 
@@ -151,7 +151,7 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 
 2. ~~**No tests, no CI.**~~ **FIXED** — 35 tests, GitHub Actions CI, clean lint, badge in README.
 
-3. **"Most Collaborative" is unreachable.** Zero community engagement. $2,500 gone.
+3. ~~**"Most Collaborative" is unreachable.**~~ **ADDRESSED** — Active community engagement on [r/GEOTAB competition thread](https://www.reddit.com/r/GEOTAB/comments/1r242zb/the_geotab_vibe_coding_2026_competition_register/). Sharing architecture explainer videos, lipsync pipeline demos, and process walkthroughs. First mover in an empty subreddit.
 
 4. **UX polish gap.** A competitor with a simpler but beautiful, accessible dashboard could outscore us on the 20%-weighted UX criterion.
 

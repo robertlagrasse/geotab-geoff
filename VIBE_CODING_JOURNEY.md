@@ -6,7 +6,8 @@ How AI-assisted development built Geoff from concept to deployed platform in und
 
 - **AI tool:** Claude Code (Claude Opus) — Anthropic's CLI agent for software engineering
 - **Human:** One developer, no team, no prior Geotab API experience
-- **Timeline:** February 15-16, 2026
+- **Timeline:** February 15-17, 2026
+- **Status:** Submitted February 17, 2026
 
 Claude Code operates as a pair-programming agent with full filesystem access, terminal execution, and the ability to read documentation, write code, run builds, and deploy — all from natural language prompts. Every file in this repository was written through conversation with Claude.
 
@@ -252,7 +253,7 @@ The gap analysis process moved the score from 7.7 → 8.675 across focused optim
 
 ## Git Commit History Analysis
 
-21 commits over 26 hours. Every line of code written through conversation with Claude.
+35 commits over 3 days. Every line of code written through conversation with Claude.
 
 ```
 Feb 15 17:10  bd6f115  Initial commit: Geotab Geoff AI coaching platform          [18,920 lines, 60 files]
@@ -276,6 +277,22 @@ Feb 16 18:17  e328c70  Add screenshots and MyGeotab PDFs                        
 Feb 16 18:33  a428be9  Add competition scoring and gap analysis                    [+185, 1 file]
 Feb 16 18:43  71cc5aa  Add test suite (35 tests), CI pipeline, lint fixes          [+1704 -57, 19 files]
 Feb 16 18:48  01937d6  Update scoring: cold start mitigated, UX 7.0→7.5           [+10 -11, 1 file]
+Feb 16 19:00  2a4f1db  Replace browser Web Speech API with server-side Cloud STT   [+89 -42, 4 files]
+Feb 16 19:06  19d2d00  Document server-side STT decision in vibe coding journey    [+16, 1 file]
+Feb 16 19:24  6ff6976  Move demos, add cost analysis, update scoring               [+44 -8, 3 files]
+Feb 16 19:28  e542491  Fix Cloud Functions count, add score trajectory             [+3 -3, 1 file]
+Feb 16 19:42  0a694f5  Add screenshots to README                                   [+22, 1 file]
+Feb 16 19:59  e12e8e2  Add comprehensive evaluation with evidence for every claim  [+338, 1 file]
+Feb 16 20:08  c924b43  Link evaluation docs from README                            [+7, 1 file]
+Feb 16 20:40  00ce4cf  Fix cost analysis math: $25/session (500x)                  [+5 -5, 1 file]
+Feb 16 20:45  3aad79f  Remove obsolete docs, fix README function names             [+6 -112, 3 files]
+Feb 16 20:50  80725fe  Remove outdated demo videos                                 [3 files deleted]
+Feb 16 21:12  ba0252e  Add 9-video "Geoff Explains" series with scripts            [+237, 12 files]
+Feb 16 21:35  12b6e3f  Add YouTube playlist link for Geoff Explains                [+4, 1 file]
+Feb 16 21:46  7403105  Add NotebookLM explainer videos, update README              [+18 -1, 1 file]
+Feb 16 22:01  09ebf2d  Add remaining NotebookLM explainer videos                   [+7 -1, 1 file]
+Feb 17 07:59  85b9db9  Add demo video YouTube link to docs                         [+9 -5, 2 files]
+Feb 17 10:07  46666a1  Add "My Name's Geoff" meme video to docs                    [+12, 2 files]
 ```
 
 ### Development Cadence
@@ -289,6 +306,9 @@ Feb 16 18:48  01937d6  Update scoring: cold start mitigated, UX 7.0→7.5       
 | **Cloud migration** (Feb 16, 3-4pm) | 1 hr | 4 | GPU migration + optimization + bug fix |
 | **Polish** (Feb 16, 4-6pm) | 2 hr | 3 | Branding, CSS, screenshots |
 | **Competition prep** (Feb 16, 6-7pm) | 1 hr | 3 | Scoring, tests, CI |
+| **Hardening** (Feb 16, 7-8pm) | 1 hr | 5 | Server-side STT, cost analysis, screenshots, evaluation doc |
+| **Content pipeline** (Feb 16, 8-10pm) | 2 hr | 6 | 9-video Geoff Explains series + NotebookLM + YouTube |
+| **Demo & meme** (Feb 17, 8-10am) | 2 hr | 2 | Demo video edit, "My Name's Geoff" meme — submission day |
 
 ### What the History Shows
 
