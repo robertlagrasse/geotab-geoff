@@ -223,6 +223,8 @@ Two-voice podcast episodes (Alex & Maya) generated via Cloud TTS Neural2 pipelin
 
 ### NotebookLM Deep Dives
 
+**[Watch the playlist on YouTube](https://youtube.com/playlist?list=PLJc554ozx031epUkMgx_jnIg7m3koczGl)**
+
 AI-generated podcast-style explainers built from Geoff's scripts using Google NotebookLM:
 
 - **The Fleet Safety Paradox** — Why more data hasn't made fleets safer, and the structural bottleneck AI can break
