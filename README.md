@@ -8,7 +8,7 @@
 
 **Geoff coaches every driver, after every shift, about every safety event.** Not with a report. Not with an email. With a real conversation.
 
-**Live demo:** [geotab-geoff.web.app](https://geotab-geoff.web.app)
+**Live demo:** [geotab-geoff.web.app](https://geotab-geoff.web.app) | **Demo video:** [Watch on YouTube](https://youtu.be/-KtFKp8wk-M)
 
 <p align="center">
   <img src="assets/coaching-speeding-cluster.png" alt="Geoff coaching a driver about a cluster of speeding events" width="800">
@@ -181,6 +181,10 @@ Geoff uses **all three Geotab data channels**:
 - **OData Data Connector** — fleet-wide KPIs and analytics for the supervisor dashboard
 
 ---
+
+## Demo Video
+
+**[Watch the full demo on YouTube](https://youtu.be/-KtFKp8wk-M)** — 3.5 minutes showing the complete driver coaching flow, escalation system, and MyGeotab supervisor dashboard.
 
 ## Geoff Explains (Video Series)
 
