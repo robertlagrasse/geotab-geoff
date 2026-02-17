@@ -315,6 +315,21 @@ This project was built entirely using AI-assisted development (vibe coding) with
 
 ---
 
+## Community Contributions
+
+Everything we learned building Geoff, we shared back. Guides, podcasts, code patterns — all open, all free.
+
+**Geotab SDK Discussions** — First active contributor in years:
+- [Project Showcase](https://github.com/Geotab/sdk/discussions/463) — Full architecture and API usage walkthrough
+- [MyGeotab Add-In Gotchas](https://github.com/Geotab/sdk/discussions/464) — 9 undocumented issues with fixes and code examples
+- [Guides + Podcasts for Participants](https://github.com/Geotab/sdk/discussions/465) — All 12 guides and 12 podcast episodes shared as competition resources
+
+**Official Vibe Guide Repo** — [PR #81](https://github.com/fhoffa/geotab-vibe-guide/pull/81) contributed 9 guides to the competition's central resource hub, covering Geotab integration patterns, infrastructure decisions, and vibe coding process.
+
+**Content Library** — 46 minutes of AI-generated podcast content, 12 comprehensive written guides, 9 "Geoff Explains" videos, and NotebookLM deep dives. All produced using the project's own AI pipelines. Total cost: ~$2 in TTS API calls.
+
+---
+
 ## License
 
 [MIT](LICENSE)
