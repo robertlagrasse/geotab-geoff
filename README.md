@@ -10,6 +10,11 @@
 
 **Live demo:** [geotab-geoff.web.app](https://geotab-geoff.web.app)
 
+<p align="center">
+  <img src="assets/coaching-speeding-cluster.png" alt="Geoff coaching a driver about a cluster of speeding events" width="800">
+  <br><em>Geoff reviews a driver's shift — identifying a cluster of speeding events at one location, with map context and event details</em>
+</p>
+
 ---
 
 ## The Problem
@@ -75,16 +80,33 @@ For context: a human safety coach costs $40-60/hour and can conduct 5-10 coachin
 - End-of-shift holistic review with pattern detection across events
 - Positive reinforcement on clean shifts (not just silence)
 
+<p align="center">
+  <img src="assets/driver-home-events.png" alt="Driver home — 8 speeding events to review" width="600">
+  <img src="assets/coaching-clean-shift.png" alt="Geoff delivering positive reinforcement on a clean shift" width="600">
+  <br><em>Left: Driver selects a shift with 8 speeding events. Right: Geoff delivers positive reinforcement on a clean shift.</em>
+</p>
+
 ### Supervisor Dashboard
 - Real-time session feed with live status updates
 - Action queue for escalated sessions — approve, deny, or discuss
 - Fleet analytics via OData Data Connector
 - Embedded as a **MyGeotab Add-In** so supervisors stay in their existing tool
 
+<p align="center">
+  <img src="assets/mygeotab-live-feed.png" alt="Live Coaching Feed inside MyGeotab" width="600">
+  <img src="assets/mygeotab-action-queue.png" alt="Supervisor Action Queue inside MyGeotab" width="600">
+  <br><em>Supervisor dashboard embedded as a MyGeotab Add-In — Live Feed (left) and Action Queue (right)</em>
+</p>
+
 ### Escalation Intelligence
 - Three-tier system: data-driven (auto), conversation-driven (auto), driver-requested
 - 7 boolean safety flags evaluated on every turn (aggressive driving, impairment, intentional violations, hostility, vehicle defects, data severity, driver requests)
 - Server-side safety net forces escalation when flags fire, even if the model doesn't
+
+<p align="center">
+  <img src="assets/coaching-escalation.png" alt="Escalation triggered — driver mentions medication side effects" width="800">
+  <br><em>Escalation in action: driver mentions medication side effects, Geoff flags it for supervisor review</em>
+</p>
 
 ### MCP Server
 - 6-tool Model Context Protocol server for Claude Desktop integration

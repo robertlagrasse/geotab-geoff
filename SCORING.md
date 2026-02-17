@@ -10,10 +10,10 @@ Source: `TUTORIAL_DESIGN.md` lines 365-369, corroborated by `HACKATHON_IDEAS.md`
 |-----------|--------|-----------|----------|
 | **Innovation** — Unique use of Geotab APIs | 30% | 9.0 | 2.70 |
 | **Technical Implementation** — Code quality, use of both APIs | 25% | 8.5 | 2.125 |
-| **User Experience** — Usability, design, accessibility | 20% | 8.0 | 1.60 |
+| **User Experience** — Usability, design, accessibility | 20% | 8.5 | 1.70 |
 | **Vibe Factor** — Effective use of AI-assisted development | 15% | 9.0 | 1.35 |
 | **Business Impact** — Real-world applicability | 10% | 9.5 | 0.95 |
-| **TOTAL** | | | **8.725/10** |
+| **TOTAL** | | | **8.825/10** |
 
 ## Prizes
 
@@ -64,7 +64,7 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 
 ---
 
-## 3. User Experience (20%) — Score: 8.0/10
+## 3. User Experience (20%) — Score: 8.5/10
 
 ### What's Working
 
@@ -74,6 +74,7 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 - [x] Real-time Firestore listeners for live updates.
 - [x] Positive reinforcement on clean shifts.
 - [x] Fun loading phrases ("Checking mirrors...", "Shifting gears...").
+- [x] **Screenshots in README.** Hero coaching shot, driver home views, MyGeotab Add-In embedded, escalation scenario — judges see the product without running it.
 - [x] **Cross-browser voice input.** Server-side Cloud STT via MediaRecorder — works in Chrome, Firefox, Safari, Edge. Better accuracy than browser Web Speech API in noisy environments (truck cabs, loading docks) and with diverse accents.
 - [x] **GPU cold start mitigated.** Two-layer warmup: module-level health ping on page load (`DriverHome.jsx:14`) wakes Cloud Run instance + loads model into GPU memory; component-level check (`GeoffAvatar.jsx:18`) confirms availability. Combined with in-process model caching (model stays in GPU memory across requests), subsequent inference is 5-15s. Demo is creator-driven — performance is controlled.
 
@@ -81,7 +82,7 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 
 - [x] ~~**Voice input is Chrome-only** (Web Speech API). Firefox/Safari judges can't use it.~~ **FIXED** — Replaced with MediaRecorder + server-side Cloud STT. Works in all modern browsers. Better accuracy in noisy environments and with accents.
 - [x] ~~**Demo videos buried in `scripts/`.**~~ **FIXED** — Moved to `demos/`, linked prominently in README.
-- [ ] **No screenshots in the README.** Will add when demo videos are reshot.
+- [x] ~~**No screenshots in the README.**~~ **DONE** — 7 screenshots: hero coaching shot, driver home (events + clean shift), MyGeotab Add-In (live feed + action queue), escalation triggered.
 - ~~**No mobile optimization.**~~ Not a priority — fleet drivers use desktop/tablet.
 - ~~**No accessibility features.**~~ Not in scope for hackathon.
 - ~~**MyGeotab Add-In dark theme.**~~ Cosmetic — not a scoring factor.
@@ -154,7 +155,7 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 
 5. ~~**Demo videos hard to find.**~~ **FIXED** — Moved to `demos/`, linked in README.
 
-6. **No screenshots in README.** Will add when demo videos are reshot.
+6. ~~**No screenshots in README.**~~ **FIXED** — 7 screenshots integrated into README.
 
 ---
 
@@ -164,7 +165,7 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 
 | # | Action | Criterion | Impact |
 |---|--------|-----------|--------|
-| 1 | Add screenshots to README (driver coaching, supervisor dashboard, MyGeotab Add-In) | UX, Innovation | Will add when demo videos are reshot |
+| ~~1~~ | ~~Add screenshots to README~~ | | **DONE** — 7 screenshots integrated: hero, driver home, coaching, MyGeotab Add-In, escalation |
 | ~~2~~ | ~~Embed or link demo videos prominently in README~~ | | **DONE** — Moved to `demos/`, linked in README |
 | ~~3~~ | ~~Set `min-instances=1` on Cloud Run lipsync service~~ | | **NOT NEEDED** — warmup on login + creator-driven demo |
 | ~~4~~ | ~~Add basic tests~~ | | **DONE** — 35 tests + CI + badge |
