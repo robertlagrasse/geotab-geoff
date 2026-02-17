@@ -10,3 +10,4 @@ __pycache__/
 *.pyc
 *.pth
 Wav2Lip/
+app/dist-addin/
