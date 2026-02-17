@@ -204,6 +204,13 @@ AI-generated podcast-style explainers built from Geoff's scripts using Google No
 
 - **The Fleet Safety Paradox** — Why more data hasn't made fleets safer, and the structural bottleneck AI can break
 - **The 100% Coverage Playbook** — How Geoff delivers total fleet coverage at $0.05/session
+- **How an AI Coach Works** — End-to-end architecture from Geotab GO device to coaching conversation
+- **A Digital Persona's Story** — How Wav2Lip turns a static photo into a talking coach
+- **AI: When to Ask for Help** — The escalation system — three tiers, seven flags, and why you can't trust the model alone
+- **Unlocking Geotab Data** — MyGeotab API, Ace AI, and OData — three channels, one fleet picture
+- **Vibe Coding: Human+AI** — How one developer and Claude Code built a production platform in 48 hours
+- **The Five-Cent Coaching Session** — Per-service cost breakdown and the 500x advantage over human coaching
+- **Designing for the Supervisor** — The MyGeotab Add-In, custom auth flow, and zero-disruption dashboard
 
 ---
 
