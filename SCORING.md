@@ -116,11 +116,11 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 - [x] Escalation system with 7 safety triggers shows domain understanding.
 - [x] MCP server extends value beyond core product.
 - [x] Embedded MyGeotab Add-In = zero workflow disruption.
-- [x] **Cost analysis in README** — $0.05/session, ~$1/driver/month, 125x cheaper than human coaching. Concrete ROI that judges can evaluate.
+- [x] **Cost analysis in README** — $0.05/session, ~$1/driver/month, 500x cheaper than human coaching. Concrete ROI that judges can evaluate.
 
 ### Gaps to Close
 
-- [x] ~~**No cost analysis.**~~ **DONE** — Full per-session and per-driver-per-month breakdown in README. $0.05/session, ~$1/driver/month, 125x cheaper than human coaching.
+- [x] ~~**No cost analysis.**~~ **DONE** — Full per-session and per-driver-per-month breakdown in README. $0.05/session, ~$1/driver/month, 500x cheaper than human coaching.
 - ~~**Demo database only.**~~ Expected for hackathon — demo database is the standard evaluation environment.
 
 ---
@@ -176,7 +176,7 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 |---|--------|-----------|--------|
 | 5 | ~~Add fallback for non-Chrome browsers~~ | ~~UX~~ | **DONE** — Server-side Cloud STT replaces Web Speech API. All browsers. |
 | 6 | ~~Add a GitHub Actions CI workflow (lint + test)~~ | ~~Technical~~ | **DONE** |
-| 7 | ~~Add cost analysis to README~~ | ~~Business~~ | **DONE** — $0.05/session, $1/driver/month, 125x vs human |
+| 7 | ~~Add cost analysis to README~~ | ~~Business~~ | **DONE** — $0.05/session, $1/driver/month, 500x vs human |
 
 ### Nice to Have
 

@@ -55,7 +55,7 @@ A typical coaching session — initial video coaching + two back-and-forth voice
 
 At 20 shifts per driver per month: **~$1.00/driver/month.**
 
-For context: a human safety coach costs $40-60/hour and can conduct 5-10 coaching sessions per day. At $50/hour and 8 sessions/day, that's **$6.25 per human coaching session** — 125x the cost of Geoff. A 200-driver fleet that currently coaches 10% of shifts would spend ~$12,500/month on human coaching for 20% coverage. Geoff delivers 100% coverage for **$200/month**.
+For context: a human safety coach costs $40-60/hour. A typical coaching session — pull up the data, have the conversation, document the outcome — takes about 30 minutes, or **~$25/session**. That's **500x the cost of Geoff.** A 200-driver fleet coaching 10% of shifts needs 400 sessions/month at $25 = **$10,000/month for 10% coverage**. Geoff delivers 100% coverage for **$200/month**.
 
 ---
 

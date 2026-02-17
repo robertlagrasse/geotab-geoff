@@ -14,7 +14,7 @@
 | **Technical Implementation** | 25% | 10/10 | 8 Cloud Functions, 10 GCP services, 35 tests, CI pipeline, GPU optimization, custom auth flow |
 | **User Experience** | 20% | 10/10 | Lip-synced avatar, cross-browser voice, two complete interfaces, real-time updates, screenshots in README |
 | **Vibe Factor** | 15% | 10/10 | 300-line development journey, 25+ commit history analysis, specific prompts, collaboration anecdotes |
-| **Business Impact** | 10% | 10/10 | Speech analytics narrative, $0.05/session cost analysis, 125x cost advantage, escalation system |
+| **Business Impact** | 10% | 10/10 | Speech analytics narrative, $0.05/session cost analysis, 500x cost advantage, escalation system |
 | **TOTAL** | 100% | **10/10** | |
 
 ---
@@ -282,7 +282,7 @@ Not hand-waving. Per-service breakdown in the README:
 | Cloud STT (Enhanced) | $0.018 | 2 voice transcriptions |
 | **Total per session** | **~$0.05** | |
 
-**$1/driver/month** at 20 shifts. **125x cheaper than human coaching** ($6.25/session vs $0.05/session). A 200-driver fleet gets 100% coverage for **$200/month** vs $12,500/month for 20% human coverage.
+**$1/driver/month** at 20 shifts. **500x cheaper than human coaching** ($25/session vs $0.05/session). A 200-driver fleet gets 100% coverage for **$200/month** vs $10,000/month for 10% human coverage.
 
 ### Escalation System Shows Domain Depth
 
@@ -334,4 +334,4 @@ From `HACKATHON_IDEAS.md` demo tips:
 
 6. **Production-grade engineering.** 35 tests, CI pipeline, server-side safety net for escalation, in-process GPU optimization, custom auth flow for MyGeotab Add-In. This isn't a hackathon prototype — it's built like it's going to production.
 
-7. **125x cost advantage.** $0.05/session vs $6.25 for human coaching. $200/month for 100% fleet coverage. The business case is quantified and defensible.
+7. **500x cost advantage.** $0.05/session vs $25 for human coaching. $200/month for 100% fleet coverage. The business case is quantified and defensible.
