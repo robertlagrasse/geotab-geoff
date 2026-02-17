@@ -151,7 +151,11 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 
 2. ~~**No tests, no CI.**~~ **FIXED** — 35 tests, GitHub Actions CI, clean lint, badge in README.
 
-3. ~~**"Most Collaborative" is unreachable.**~~ **ADDRESSED** — Published 12 comprehensive guides (architecture, Geotab API, vibe coding patterns), 12 AI-generated podcast episodes, 9 "Geoff Explains" videos, and NotebookLM deep dives. Reddit community engagement attempted on [r/GEOTAB competition thread](https://www.reddit.com/r/GEOTAB/comments/1r242zb/the_geotab_vibe_coding_2026_competition_register/) — banned after posting contest content (appealing). All knowledge-sharing materials available on GitHub regardless.
+3. ~~**"Most Collaborative" is unreachable.**~~ **STRONG POSITION** — Multi-channel community engagement:
+   - **Geotab SDK Discussions**: 3 posts — [Show and Tell](https://github.com/Geotab/sdk/discussions/463), [Add-In Gotchas Q&A](https://github.com/Geotab/sdk/discussions/464), [Guides + Podcasts](https://github.com/Geotab/sdk/discussions/465)
+   - **Vibe Guide PR**: [PR #81](https://github.com/fhoffa/geotab-vibe-guide/pull/81) — contributed 9 guides to the official competition resource repo
+   - **Content library**: 12 guides, 12 podcast episodes, 9 explainer videos, NotebookLM deep dives
+   - **Reddit**: Banned from r/GEOTAB after posting contest content per rules (appealing to mod)
 
 4. **UX polish gap.** A competitor with a simpler but beautiful, accessible dashboard could outscore us on the 20%-weighted UX criterion.
 

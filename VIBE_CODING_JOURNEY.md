@@ -368,9 +368,19 @@ Then the question: "Can we turn these into podcasts?" The pipeline:
 
 This is vibe coding applied to content creation. The human decides *what knowledge to share*. The AI writes the scripts, generates the audio, and assembles the final product. Cost: roughly $2 in TTS API calls for the entire series.
 
-### Reddit Community Engagement (and Getting Banned)
+### Community Engagement Across Multiple Channels
 
-The contest rules explicitly encouraged community engagement on the [r/GEOTAB competition thread](https://www.reddit.com/r/GEOTAB/comments/1r242zb/the_geotab_vibe_coding_2026_competition_register/). We started posting — architecture explainers, demo videos, lipsync pipeline showcases. Then got banned from the subreddit. Appeal sent to the moderator. The irony: the thread was entirely empty before we started posting.
+The "Most Collaborative" prize goes to the participant most active in helping others on Reddit and GitHub. We went all-in:
+
+**Geotab SDK Discussions** (github.com/Geotab/sdk/discussions):
+- [Show and Tell #463](https://github.com/Geotab/sdk/discussions/463) — Full project showcase with API usage details
+- [Q&A #464](https://github.com/Geotab/sdk/discussions/464) — 9 undocumented MyGeotab Add-In gotchas with code examples
+- [General #465](https://github.com/Geotab/sdk/discussions/465) — All 12 guides and podcast episodes shared as resources
+
+**Official Vibe Guide Repo** (github.com/fhoffa/geotab-vibe-guide):
+- [PR #81](https://github.com/fhoffa/geotab-vibe-guide/pull/81) — Added Community-Contributed Guides section to RESOURCES.md, linking 9 guides covering Geotab integration patterns, architecture decisions, and vibe coding process
+
+**Reddit** — Banned from r/GEOTAB after posting contest content per the competition rules. Appeal sent to moderator. The thread was entirely empty before we started posting.
 
 All knowledge-sharing materials remain available on GitHub regardless of Reddit status.
 
