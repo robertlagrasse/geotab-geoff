@@ -253,7 +253,7 @@ The gap analysis process moved the score from 7.7 → 8.675 across focused optim
 
 ## Git Commit History Analysis
 
-35 commits over 3 days. Every line of code written through conversation with Claude.
+38 commits over 3 days. Every line of code written through conversation with Claude.
 
 ```
 Feb 15 17:10  bd6f115  Initial commit: Geotab Geoff AI coaching platform          [18,920 lines, 60 files]
@@ -293,6 +293,10 @@ Feb 16 21:46  7403105  Add NotebookLM explainer videos, update README           
 Feb 16 22:01  09ebf2d  Add remaining NotebookLM explainer videos                   [+7 -1, 1 file]
 Feb 17 07:59  85b9db9  Add demo video YouTube link to docs                         [+9 -5, 2 files]
 Feb 17 10:07  46666a1  Add "My Name's Geoff" meme video to docs                    [+12, 2 files]
+Feb 17 11:30  1ac4b50  Update status: submitted, Reddit engagement                  [+45 -15, 2 files]
+Feb 17 13:00  d191e49  Add 12 comprehensive guides for vibe coding                  [+2688, 14 files]
+Feb 17 14:30  21307e5  Add AI-generated podcast: The 18,920-Line First Commit       [+26, 2 files]
+Feb 17 16:00  d5db972  Add 11 AI-generated podcast episodes (02-12)                 [11 MP3 files]
 ```
 
 ### Development Cadence
@@ -309,6 +313,7 @@ Feb 17 10:07  46666a1  Add "My Name's Geoff" meme video to docs                 
 | **Hardening** (Feb 16, 7-8pm) | 1 hr | 5 | Server-side STT, cost analysis, screenshots, evaluation doc |
 | **Content pipeline** (Feb 16, 8-10pm) | 2 hr | 6 | 9-video Geoff Explains series + NotebookLM + YouTube |
 | **Demo & meme** (Feb 17, 8-10am) | 2 hr | 2 | Demo video edit, "My Name's Geoff" meme — submission day |
+| **Knowledge sharing** (Feb 17, afternoon) | 4 hr | 3 | 12 guides, 12 podcast episodes, community materials |
 
 ### What the History Shows
 
@@ -331,6 +336,43 @@ The ["My Name's Geoff"](https://youtube.com/shorts/GTz1UZnx7T8) meme video is a 
 3. Result: 9-second video, start to finish in under 5 minutes
 
 No storyboarding. No video editing software. One natural language prompt produced a complete multimedia artifact using the project's own AI pipeline. This is what vibe coding looks like when the tools are already built.
+
+## Day 5: Knowledge Sharing at Scale (Feb 17, afternoon)
+
+### 12 Comprehensive Guides
+
+After submission, the focus shifted to helping others. One prompt — "What other material might we develop based on this project that helps other people vibe code more effectively?" — produced 12 topics. A second prompt — "Write comprehensive guides for all of these" — and Claude generated 2,688 lines across 14 files:
+
+1. **The 18,920-Line First Commit** — Full-stack architecture prompting
+2. **Steal From Another Industry** — Cross-domain product design
+3. **AI Evaluating AI** — Gap analysis loops for hackathon optimization
+4. **Server-Side Safety Net** — Deterministic overrides for LLM outputs
+5. **MyGeotab Add-In Gotchas** — 9 undocumented issues for Add-In developers
+6. **Ace AI Integration Patterns** — 3-step async API and conversational context
+7. **OData Data Connector Recipes** — Fleet analytics queries
+8. **Cloud Run GPU on a Budget** — Scale-to-zero NVIDIA L4
+9. **The Five-Cent Pipeline** — Per-unit cost estimation framework
+10. **MCP Server Patterns** — FastMCP and Claude Desktop integration
+11. **When to Correct the AI** — The human judgment layer
+12. **Prompt to Multimedia** — Composable AI content pipelines
+
+### 12 AI-Generated Podcast Episodes
+
+Then the question: "Can we turn these into podcasts?" The pipeline:
+
+1. Claude wrote two-voice transcripts (Alex and Maya) for each guide — not just readings, but structured conversations with questions, examples, and analysis
+2. Google Cloud TTS Neural2 generated audio per segment (Neural2-D for Alex, Neural2-C for Maya)
+3. ffmpeg assembled segments with natural silence gaps, applied EBU R128 loudness normalization, and exported to MP3
+
+**12 episodes, ~46 minutes of total content, generated from one conversation.** The first episode (The 18,920-Line First Commit, 7:54) was hand-crafted to dial in the voice settings and pacing. Then a reusable Python script batch-processed the remaining 11 episodes — ~200 TTS API calls completing in about 15 minutes.
+
+This is vibe coding applied to content creation. The human decides *what knowledge to share*. The AI writes the scripts, generates the audio, and assembles the final product. Cost: roughly $2 in TTS API calls for the entire series.
+
+### Reddit Community Engagement (and Getting Banned)
+
+The contest rules explicitly encouraged community engagement on the [r/GEOTAB competition thread](https://www.reddit.com/r/GEOTAB/comments/1r242zb/the_geotab_vibe_coding_2026_competition_register/). We started posting — architecture explainers, demo videos, lipsync pipeline showcases. Then got banned from the subreddit. Appeal sent to the moderator. The irony: the thread was entirely empty before we started posting.
+
+All knowledge-sharing materials remain available on GitHub regardless of Reddit status.
 
 ## What AI Couldn't Do
 

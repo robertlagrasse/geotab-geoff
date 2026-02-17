@@ -23,7 +23,7 @@ Source: `TUTORIAL_DESIGN.md` lines 365-369, corroborated by `HACKATHON_IDEAS.md`
 |-------|-------|-------------|
 | **Vibe Master** | $10,000 | Strong contender — top-tier on Innovation + Business Impact |
 | **The Innovator** | $5,000 | Strongest candidate — nobody else is doing lip-synced avatar coaching |
-| **Most Collaborative** | $2,500 | Now competing — active Reddit community engagement, sharing architecture explainers and process videos |
+| **Most Collaborative** | $2,500 | Strong contender — 12 comprehensive guides, 12 AI-generated podcast episodes, Reddit engagement (banned from r/GEOTAB after posting contest content per rules — appealing to mod) |
 
 ---
 
@@ -151,7 +151,7 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 
 2. ~~**No tests, no CI.**~~ **FIXED** — 35 tests, GitHub Actions CI, clean lint, badge in README.
 
-3. ~~**"Most Collaborative" is unreachable.**~~ **ADDRESSED** — Active community engagement on [r/GEOTAB competition thread](https://www.reddit.com/r/GEOTAB/comments/1r242zb/the_geotab_vibe_coding_2026_competition_register/). Sharing architecture explainer videos, lipsync pipeline demos, and process walkthroughs. First mover in an empty subreddit.
+3. ~~**"Most Collaborative" is unreachable.**~~ **ADDRESSED** — Published 12 comprehensive guides (architecture, Geotab API, vibe coding patterns), 12 AI-generated podcast episodes, 9 "Geoff Explains" videos, and NotebookLM deep dives. Reddit community engagement attempted on [r/GEOTAB competition thread](https://www.reddit.com/r/GEOTAB/comments/1r242zb/the_geotab_vibe_coding_2026_competition_register/) — banned after posting contest content (appealing). All knowledge-sharing materials available on GitHub regardless.
 
 4. **UX polish gap.** A competitor with a simpler but beautiful, accessible dashboard could outscore us on the 20%-weighted UX criterion.
 
@@ -186,4 +186,4 @@ No gaps. Scope is right. The contest warns against over-engineering and unnecess
 |---|--------|-----------|--------|
 | 8 | ~~Add more prompt examples to VIBE_CODING_JOURNEY.md~~ | ~~Vibe Factor~~ | **DONE** — Day 4 section + git commit history analysis |
 | 9 | Basic mobile responsiveness for driver view | UX | Tablet-in-cab is a real use case |
-| 10 | Community engagement (forum post, shared skill, blog post) | Collaborative | Only matters if targeting the $2.5K collaborative prize |
+| ~~10~~ | ~~Community engagement~~ | ~~Collaborative~~ | **DONE** — 12 guides, 12 podcast episodes, 9 explainer videos, NotebookLM deep dives. Reddit engagement blocked (banned from r/GEOTAB after posting per contest rules — appealing). |
