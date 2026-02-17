@@ -11,3 +11,6 @@ __pycache__/
 *.pth
 Wav2Lip/
 app/dist-addin/
+*.mp4
+*.wav
+!demos/*.mp4
