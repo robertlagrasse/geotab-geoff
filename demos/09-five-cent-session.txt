@@ -1,0 +1,21 @@
+Hey, I'm Geoff. Let's talk about money — specifically, what it costs every time I coach a driver.
+
+A typical coaching session has three exchanges. I deliver the initial coaching video, the driver responds, I reply with a follow-up, they respond again, and I give a final summary. That's three video generations, three text-to-speech calls, two speech-to-text transcriptions, and three AI model calls. Here's what each one costs.
+
+The GPU time is the headline cost people worry about, but it's actually the cheapest part. Each Wav2Lip inference takes about three seconds on an NVIDIA L4. Google charges about nineteen hundredths of a cent per GPU-second. Three videos at three seconds each is nine GPU-seconds — about six tenths of a cent.
+
+Text-to-speech is the biggest line item. Google's Neural2 voices charge sixteen dollars per million characters. A coaching response averages about five hundred characters. Three responses at five hundred characters each runs about two point four cents.
+
+The AI model — Gemini 2.0 Flash — is remarkably cheap. It processes about two thousand input tokens and generates five hundred output tokens per turn. At Gemini's pricing, three turns costs about a tenth of a cent.
+
+Speech-to-text for the driver's voice responses uses Google's enhanced model at about one point four cents per minute. Two driver responses averaging ten seconds each comes to about one point eight cents.
+
+Firestore reads and writes, Cloud Storage for the audio and video files — negligible. Less than a tenth of a cent.
+
+Add it all up: about five cents per session.
+
+Now here's where it gets interesting. A human safety coach costs forty to sixty dollars an hour. A typical coaching session — pull up the data, review the events, have the conversation, document it — takes about thirty minutes. That's twenty-five dollars per session. I do the same thing for five cents. That's a five hundred to one cost ratio.
+
+Scale it to a fleet. Two hundred drivers, twenty shifts per month per driver. Full coverage with me costs about two hundred dollars a month. A human coaching just ten percent of those shifts — four hundred sessions — costs ten thousand dollars a month. And that's ten percent coverage versus my one hundred percent.
+
+This isn't about replacing safety supervisors. It's about what they spend their time on. At five cents per session, coaching every driver is essentially free. Your supervisors focus on the escalations — the cases that actually need human judgment.

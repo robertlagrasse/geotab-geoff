@@ -1,0 +1,15 @@
+Hey, I'm Geoff. If you're building on the Geotab platform, you need to understand the three data channels — and when to use each one. I use all three, and they serve very different purposes.
+
+The first is the MyGeotab API. This is the real-time, entity-level interface. You authenticate with the SDK, and you can query individual records — exception events, driver profiles, vehicle data, GPS log records, speed limits at specific coordinates. When I need to know exactly what happened at 2:47 PM on Route 9 — what speed was the vehicle doing, what was the posted limit, how long did the event last — this is where I go. It's fast, typically under two seconds per call, and it gives you granular data.
+
+I use five key methods from this API. Get for exception events, drivers, and log records. GetRoadMaxSpeeds for posted speed limits at GPS coordinates. And GetSystemTimeUtc for time synchronization. Each event gets enriched with speed context and location data through these calls.
+
+The second channel is Ace AI. This is Geotab's built-in artificial intelligence, and you access it through GetAceResults. You send a natural language query — something like "what are this driver's recurring safety patterns over the last thirty days" — and Ace responds with insights drawn from across the fleet data. It's not a raw data query. It's an analytical layer.
+
+I use Ace at a critical point in the pipeline: coaching generation. Before I write a coaching script, I ask Ace about the driver's history and patterns. That context flows into the Gemini prompt, so my coaching isn't based solely on today's events. It's informed by whether this is a new pattern or a recurring one. Ace context persists through the entire multi-turn conversation, so follow-up questions from the driver still have that historical awareness.
+
+The third channel is the OData Data Connector. This is the fleet-wide analytics layer. It exposes pre-aggregated data — total distance driven, fuel consumption, idle time, safety scores — across the entire fleet. Queries run in five to eleven seconds and return tabular data suitable for dashboards and reports.
+
+I use OData for the supervisor dashboard. When a fleet manager wants to see safety trends across all two hundred drivers, I'm not making two hundred individual API calls. I'm pulling aggregated data through OData and presenting it as fleet-level analytics.
+
+The pattern is straightforward. MyGeotab API for real-time, granular, per-event data. Ace AI for historical context and pattern analysis. OData for fleet-wide aggregated analytics. Each channel does what it's best at, and together they give you a complete picture — from a single speeding event to a fleet-wide safety trend.

@@ -1,0 +1,15 @@
+Hey, I'm Geoff. Let me walk you through exactly how I work, from the moment a driver finishes their shift to the moment they're done talking with me.
+
+It starts with hardware. Every vehicle in the fleet has a Geotab GO device plugged into the OBD-II port. That device records everything — GPS coordinates, speed, acceleration, braking, engine data. When a safety event happens — speeding, harsh braking, aggressive acceleration — it gets logged as an exception event with a timestamp, location, and severity.
+
+My backend polls the Geotab API on a regular schedule using the official SDK. I pull exception events, driver records, vehicle data, GPS logs, and posted speed limits for every event location. But I don't just grab raw data. I also call Geotab's Ace AI to get natural language insights about the driver's history and patterns. That context makes my coaching specific, not generic.
+
+Once I have all the events for a driver's shift, I assemble them into a shift-level view. This is important — I don't coach event by event. I look at the whole shift together. My GPS clustering algorithm uses Haversine distance to detect location patterns. If a driver has four speeding events within a hundred meters of each other, that's probably a signage issue or a road design problem, not four separate acts of reckless driving. That distinction changes the entire coaching conversation.
+
+I send the assembled shift data — events, speed limits, GPS clusters, Ace insights, and the driver's recent history — to Gemini 2.0 Flash. The model generates a personalized coaching script that addresses the specific shift, not a template.
+
+That script goes to Google Cloud Text-to-Speech, which synthesizes it into natural-sounding audio using a Neural2 voice. The audio then goes to my lipsync service — Wav2Lip running on a Cloud Run instance with an NVIDIA L4 GPU. It takes my photo and the audio and generates a lip-synced video of me delivering the coaching.
+
+The driver sees the video, hears the coaching, and can respond — either by voice or text. Their response feeds back into Gemini for a multi-turn conversation. Every response also runs through my escalation system, which evaluates seven safety flags. If something serious comes up — signs of impairment, road rage, intentional violations — the session gets flagged and routed to a supervisor with full context.
+
+That's the full loop. Geotab device, API poll, shift assembly, GPS clustering, AI coaching, voice synthesis, lip-synced video, two-way conversation, and escalation. All automated, all for about five cents per session.

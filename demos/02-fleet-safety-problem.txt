@@ -1,0 +1,13 @@
+Hey, I'm Geoff. Let's talk about a problem that every fleet safety manager knows but nobody's solved.
+
+If you're running a fleet of two hundred drivers, you probably have two, maybe three safety supervisors. Each one can realistically coach five to ten drivers a week. That's twenty to thirty drivers out of two hundred. Fifteen percent coverage on a good week. The other eighty-five percent? They get a report. Maybe an email. Something they'll glance at and forget before their next shift.
+
+And here's the thing — the supervisors aren't lazy. They're buried. Every coaching session takes about thirty minutes. Pull up the data, review the events, have the conversation, document the outcome. At that pace, you'd need twenty supervisors to coach every driver once a month. Nobody has that budget.
+
+So what happens? You triage. You focus on the worst offenders. The driver with twelve speeding events gets a talking-to. The driver with three? They're fine — until they're not. The middle of the distribution, where most of your risk actually lives, gets no coaching at all.
+
+The result is a reactive safety culture. You're always responding to the worst cases instead of preventing them. You know the patterns are there — the same intersection, the same time of day, the same route — but by the time a supervisor gets to it, it's already a trend.
+
+This is the structural problem. Not bad tools, not bad data, not bad supervisors. It's math. One human can't have a hundred conversations. That's why I exist. I can coach every driver, after every shift, about every safety event. Not with a report. With a real conversation. One hundred percent coverage, every day.
+
+That's not an incremental improvement. That's a different category.

@@ -1,0 +1,11 @@
+Hey, I'm Geoff. Let me explain how I got my face — and why it works the way it does.
+
+When you see me talking, what you're actually watching is a lip-synced video generated in real time. I start as a static photograph — just a single PNG image. That image gets combined with an audio file using a neural network called Wav2Lip, which was developed by researchers at the International Institute of Information Technology. Wav2Lip analyzes the audio waveform, predicts the mouth shapes frame by frame, and composites them onto my face in the photo. The result is a video where my lips match the speech naturally.
+
+This runs on a GPU — specifically an NVIDIA L4 on Google Cloud Run. The L4 is a data center GPU optimized for inference workloads. It's not the biggest GPU you can get, but it hits the sweet spot for this job. A typical ten-second coaching clip takes about three seconds of GPU time to render.
+
+Now, you might ask — why not use a 3D model? Why not render a full animated character in the browser? We considered that early on. The problem is fidelity and uncanny valley. Client-side 3D avatars with real-time lip sync look — well, they look like video game characters from 2015. Wav2Lip applied to a real photograph produces something that looks human because it starts from a human face. The approach is simpler and the result is better.
+
+Cold starts are the operational challenge with GPU workloads. Cloud Run scales to zero when idle, and spinning up a GPU instance takes thirty to sixty seconds. We handle this with a two-layer warmup. When a driver logs in, their browser immediately pings the lipsync service health endpoint. That wakes up the Cloud Run instance and loads the Wav2Lip model into GPU memory. By the time the driver selects a coaching session, the GPU is warm and inference takes seconds, not minutes. The model stays cached in GPU memory across requests, so subsequent videos are fast.
+
+The whole pipeline costs about two tenths of a cent per video. A static image, a few seconds of GPU inference, and you get a talking face that's convincing enough to have a real conversation with. For a fleet coaching application, that's the right trade-off — not cutting-edge visual effects, but good enough to create engagement at near-zero cost.

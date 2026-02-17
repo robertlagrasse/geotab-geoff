@@ -1,0 +1,15 @@
+Hey, I'm Geoff. So far we've talked a lot about the driver experience — the coaching conversations, the voice input, the videos. But there's a whole other side to this platform: what the supervisor sees.
+
+The supervisor dashboard is embedded directly inside MyGeotab as an Add-In. That's important. Supervisors already live in MyGeotab all day — managing vehicles, reviewing reports, handling fleet operations. If I made them open a separate application to review coaching sessions, adoption would drop. Instead, my dashboard shows up as a tab inside the tool they're already using. Zero workflow disruption.
+
+The dashboard has two main views. The first is the live coaching feed. Every active and recent coaching session appears in real time, updated through Firestore listeners. Supervisors can see which drivers are currently being coached, what events triggered the session, and how the conversation is going — without interrupting it.
+
+The second view is the action queue. This is where escalated sessions land. When my escalation system flags a session — whether from data triggers, conversation triggers, or a driver requesting a supervisor — it appears here with full context. The supervisor sees the complete transcript, the specific safety flags that fired, the event data, and a summary. They can approve, deny, or add notes. They don't have to reconstruct what happened — everything they need is right there.
+
+Getting this to work inside MyGeotab required solving some interesting technical problems. MyGeotab loads Add-Ins in an iframe and strips out the HTML head element — which means all your CSS vanishes. We had to inject styles through JavaScript instead. It also doesn't execute inline script tags, so the entire frontend had to be compiled as an IIFE — an immediately invoked function expression — instead of an ES module.
+
+The authentication flow is also custom. MyGeotab provides a session credential, but my backend uses Firebase for authentication. So when a supervisor opens the Add-In, we take their MyGeotab session, verify it directly against the Geotab API using a JSON-RPC call, and exchange it for a Firebase custom token. The supervisor never has to log in separately — it's seamless.
+
+The fleet analytics tab pulls data through Geotab's OData Data Connector, showing fleet-wide safety trends, driver rankings, and KPIs. This gives supervisors the big picture alongside the individual coaching sessions.
+
+The whole point is that I handle the routine coaching, and supervisors handle the exceptions. The dashboard is designed to make that handoff clean — full context, immediate access, no extra steps.

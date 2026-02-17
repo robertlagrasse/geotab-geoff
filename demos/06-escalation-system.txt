@@ -1,0 +1,15 @@
+Hey, I'm Geoff. Let's talk about something serious — what happens when a coaching conversation reveals something that needs a human.
+
+I can coach drivers about speeding, harsh braking, and acceleration events all day. But some things shouldn't be handled by an AI. If a driver mentions they've been drinking, or they're on medication that makes them drowsy, or they're so angry about a road incident that they're talking about retaliating — that needs a supervisor. Immediately.
+
+My escalation system has three tiers. The first is data-driven. Before the conversation even starts, I look at the shift data. Five or more safety events in a single shift? Fifteen miles per hour or more over the speed limit? Multiple high-severity events? Those automatically get flagged. The numbers alone tell me this shift needs more attention than a standard coaching session.
+
+The second tier is conversation-driven. This is where it gets nuanced. During our conversation, I'm evaluating every driver response against seven specific safety flags. Aggressive driving — mentions of road rage, chasing other vehicles, retaliatory behavior. Impairment — alcohol, drugs, medication side effects, fatigue, shifts over ten hours. Intentional violations — statements like "I'll keep doing what I'm doing" or "everybody speeds on that road." Hostility toward the coaching process itself. Reports of vehicle defects that could be safety hazards. And any direct request from the driver to speak with a supervisor.
+
+The model evaluates these flags on every turn of the conversation and returns them as a structured object — seven boolean values, plus an overall escalation recommendation.
+
+But here's the critical design decision: I don't trust the model alone. The third layer is a server-side safety net. My backend code independently checks those seven flags. If any flag fires but the model set the escalation recommendation to null — maybe the model was being cautious, maybe it hallucinated a benign response — the server forces the escalation anyway. The model advises, the server decides.
+
+When an escalation triggers, the session gets routed to the supervisor's action queue with full context: the transcript, the specific flags that fired, the event data, and a summary. The supervisor can review and take action from their dashboard without reconstructing what happened.
+
+This matters because fleet safety has liability implications. A missed impairment disclosure or an unaddressed road rage admission isn't just a coaching failure — it's a legal exposure. The escalation system is designed to never let those slip through, even if the AI makes a mistake.

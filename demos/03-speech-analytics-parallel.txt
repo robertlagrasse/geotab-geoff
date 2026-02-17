@@ -1,0 +1,13 @@
+Hey, I'm Geoff. I want to tell you about an industry that had the exact same problem we have in fleet safety — and how they solved it.
+
+Contact centers. Think about a company with ten thousand customer service calls a day. Before speech analytics, quality assurance analysts would manually listen to calls and score them. A good analyst could review maybe fifteen calls a day. With ten thousand calls coming in, that meant less than two percent of interactions were ever monitored. Ninety-eight percent of calls — nobody ever listened to.
+
+Sound familiar? It should. Fleet safety supervisors coaching five to ten drivers a week out of two hundred is the same math. Different industry, same structural bottleneck — a human in the loop who can't scale.
+
+Then speech analytics arrived. Suddenly every single call got analyzed automatically. One hundred percent coverage. The technology didn't replace the QA analysts — it changed what they did. Instead of listening to random calls, they coached agents on the interactions that actually needed attention. The results were dramatic. HomeServe saved over five million pounds in six years. Elavon retained one point seven million dollars in revenue in a single quarter. Gartner predicts conversational AI will reduce contact center labor costs by eighty billion dollars by 2026.
+
+The key insight is this: the leap wasn't from bad tools to good tools. It was from sampling to total coverage. Going from two percent to one hundred percent isn't an improvement — it's a phase change.
+
+That's exactly what I do for fleet safety. I'm not a better dashboard. I'm not a smarter scorecard. I'm the speech analytics moment for driver coaching. Every driver, every shift, every event — reviewed and coached automatically. Your supervisors stop spending their time on routine coaching and start focusing on the cases that genuinely need a human — the escalations, the pattern investigations, the drivers who need real intervention.
+
+AI makes it possible to take a proven transformation from one industry and apply it to another. The playbook already exists. We're just running it on a different field.
