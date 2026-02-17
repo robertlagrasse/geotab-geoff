@@ -216,15 +216,36 @@ Claude built the entire test infrastructure in a single pass: 31 backend tests (
 
 Claude verified: two-layer warmup exists (module-level health ping on login + component-level check on mount), combined with in-process model caching. The risk was already mitigated. This is a pattern in the collaboration — the human maintains operational awareness of what's deployed and working, while the AI can lose track of features it implemented in earlier sessions.
 
+### Server-Side Speech-to-Text: Human Catches the Real Problem
+
+The SCORING.md flagged "Voice input is Chrome-only" as a UX gap — the frontend used the browser's Web Speech API (`window.SpeechRecognition`), which only works in Chrome. Claude's initial recommendation was to add a fallback message for non-Chrome users.
+
+The human pushed back:
+- "Are you sure about the voice input being Chrome only? I thought we were recording and doing STT on the server side."
+
+Claude checked the code — the human was wrong about what was already implemented (the backend had a `transcribeAudio` function but the frontend never called it), but right about the correct architecture. Then the human delivered the real insight:
+- "No. Use server-side STT. In the real world, noise and accents screw up client-side STT. Implement server-side STT and note the reasons."
+
+This is a pattern that repeated throughout the project: the AI identifies the *symptom* (Chrome-only), but the human identifies the *real problem* (client-side STT is wrong for fleet drivers). Truck cabs are noisy. Loading docks are noisy. Fleet drivers have diverse accents. Browser-side speech recognition is optimized for quiet rooms with standard accents — the exact opposite of the deployment environment.
+
+Claude implemented the fix in one pass: exposed the existing `transcribeAudio` as a callable Cloud Function, replaced `window.SpeechRecognition` with `MediaRecorder` (which works in all modern browsers), and wired the audio blob to the server for transcription via Google Cloud Speech-to-Text with the enhanced model. The result:
+- **Cross-browser**: MediaRecorder works in Chrome, Firefox, Safari, Edge
+- **Better accuracy**: Cloud STT enhanced model handles ambient noise and accents
+- **Consistent**: Same transcription quality regardless of client device
+
+The backend `transcribeAudio` function had been sitting in `functions/speech/stt.js` since Day 1, imported but never exposed. The infrastructure was already there — it just needed the human's domain knowledge to recognize it should be the primary path, not a backup.
+
 ### Score Trajectory
 
-The gap analysis process moved the score from 7.7 → 8.5 across three focused hours:
+The gap analysis process moved the score from 7.7 → 8.675 across focused optimization:
 
 | Phase | Innovation | Technical | UX | Vibe | Business | Total |
 |-------|-----------|-----------|-----|------|----------|-------|
 | Before optimization | 8.5 | 7.0 | 6.5 | 7.0 | 9.0 | **7.7** |
 | After tests + CI | 9.0 | 8.5 | 7.0 | 8.5 | 9.0 | **8.4** |
 | After UX corrections | 9.0 | 8.5 | 7.5 | 8.5 | 9.0 | **8.5** |
+| After prompts + git analysis | 9.0 | 8.5 | 7.5 | 9.0 | 9.0 | **8.575** |
+| After server-side STT | 9.0 | 8.5 | 8.0 | 9.0 | 9.0 | **8.675** |
 
 ---
 
