@@ -252,6 +252,12 @@ curl -s https://pollgeotabevents-pdqai5yj3a-uc.a.run.app
 
 This project was built entirely using AI-assisted development (vibe coding) with **Claude Code** (Claude Opus). See [VIBE_CODING_JOURNEY.md](VIBE_CODING_JOURNEY.md) for the full story of how AI tools shaped every aspect of the project — from architecture to implementation to this README.
 
+### Competition Documents
+
+- [EVALUATION.md](EVALUATION.md) — Detailed evaluation against the official judging criteria with specific evidence for every claim
+- [VIBE_CODING_JOURNEY.md](VIBE_CODING_JOURNEY.md) — Full AI-assisted development story: prompts, iteration, collaboration anecdotes, git commit analysis
+- [SCORING.md](SCORING.md) — Gap analysis and score tracking used during iterative optimization
+
 ---
 
 ## License
