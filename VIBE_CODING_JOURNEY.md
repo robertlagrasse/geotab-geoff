@@ -302,6 +302,16 @@ Feb 16 18:48  01937d6  Update scoring: cold start mitigated, UX 7.0→7.5       
 
 ---
 
+## The Meme Video: Vibe Coding in Real Time
+
+The ["My Name's Geoff"](https://youtube.com/shorts/GTz1UZnx7T8) meme video is a micro case study in human-AI collaboration speed. The entire creative pipeline — from idea to uploaded YouTube Short — happened in a single conversation:
+
+1. Human: "Get the audio from this meme video, there's a geotab.png, create a video that shows Geotab then cuts to Geoff lipsyncing the 'my name is Jeff' audio"
+2. Claude: Downloaded the meme audio with yt-dlp, analyzed the waveform to find the speech at 2.8-3.8s, trimmed it, generated Cloud TTS for the Geotab intro, sent the meme audio + Geoff's image to the local Wav2Lip container, assembled both parts with ffmpeg
+3. Result: 9-second video, start to finish in under 5 minutes
+
+No storyboarding. No video editing software. One natural language prompt produced a complete multimedia artifact using the project's own AI pipeline. This is what vibe coding looks like when the tools are already built.
+
 ## What AI Couldn't Do
 
 **Run the GPU.** Wav2Lip requires an NVIDIA GPU. Claude configured the Docker container, API, and Cloud Run deployment, but the initial local GPU setup (RTX 4060 Ti, Cloudflare tunnel) required manual work. The migration to Cloud Run GPU was fully AI-driven.
