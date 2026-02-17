@@ -182,15 +182,6 @@ Geoff uses **all three Geotab data channels**:
 
 ---
 
-## Demo
-
-Two demo videos show Geoff in action — Geoff himself explains the platform:
-
-- **[Intro](demos/geoff-intro.mp4)** — 2-minute overview of what Geoff does and why
-- **[Full demo](demos/geoff-demo.mp4)** — 5-minute deep dive into the architecture, coaching flow, escalation system, and Geotab API integration
-
----
-
 ## Project Structure
 
 ```
