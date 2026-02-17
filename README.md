@@ -284,6 +284,16 @@ This project was built entirely using AI-assisted development (vibe coding) with
 - [VIBE_CODING_JOURNEY.md](VIBE_CODING_JOURNEY.md) — Full AI-assisted development story: prompts, iteration, collaboration anecdotes, git commit analysis
 - [SCORING.md](SCORING.md) — Gap analysis and score tracking used during iterative optimization
 
+### Guides
+
+12 practical guides distilled from this project — [browse all guides](guides/):
+
+- [The 18,920-Line First Commit](guides/01-the-18920-line-first-commit.md) — How to prompt for a full-stack architecture in one shot
+- [MyGeotab Add-In Gotchas](guides/05-mygeotab-addin-gotchas.md) — 9 undocumented gotchas for Add-In developers
+- [Ace AI Integration Patterns](guides/06-ace-ai-integration.md) — The 3-step async API and conversational context
+- [Cloud Run GPU on a Budget](guides/08-cloud-run-gpu-on-a-budget.md) — Scale-to-zero GPU inference at ~$0.004/request
+- [When to Correct the AI](guides/11-when-to-correct-the-ai.md) — The human judgment layer in vibe coding
+
 ---
 
 ## License
