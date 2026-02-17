@@ -332,6 +332,8 @@ Everything we learned building Geoff, we shared back. Guides, podcasts, code pat
 
 **Official Vibe Guide Repo** — [PR #81](https://github.com/fhoffa/geotab-vibe-guide/pull/81) contributed 9 guides to the competition's central resource hub, covering Geotab integration patterns, infrastructure decisions, and vibe coding process.
 
+**r/GEOTAB** — The [competition thread](https://www.reddit.com/r/GEOTAB/comments/1r242zb/the_geotab_vibe_coding_2026_competition_register/) was empty when we found it. We were the first participant to engage — posting demo videos, architecture walkthroughs, and lipsync pipeline showcases. Got auto-banned mid-posting. Appeal pending with the moderator.
+
 **Content Library** — 46 minutes of AI-generated podcast content, 12 comprehensive written guides, 9 "Geoff Explains" videos, and NotebookLM deep dives. All produced using the project's own AI pipelines. Total cost: ~$2 in TTS API calls.
 
 ---
