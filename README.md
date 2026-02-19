@@ -192,6 +192,8 @@ Geoff uses **all three Geotab data channels**:
 
 **[Watch the full demo on YouTube](https://youtu.be/-KtFKp8wk-M)** — 3.5 minutes showing the complete driver coaching flow, escalation system, and MyGeotab supervisor dashboard.
 
+**[Demonstrations playlist](https://www.youtube.com/playlist?list=PLJc554ozx033n8DtCxdzjjUJweoUnd5dq)** — All demo videos and walkthroughs in one place.
+
 **[My Name's Geoff](https://youtube.com/shorts/GTz1UZnx7T8)** — 9-second meme intro. Cloud TTS introduces Geotab, then Wav2Lip syncs Geoff to the iconic audio. Built in one conversation with Claude Code: yt-dlp extraction, audio trimming, TTS generation, lipsync pipeline, ffmpeg assembly.
 
 ## Geoff Explains (Video Series)
