@@ -387,9 +387,13 @@ The "Most Collaborative" prize goes to the participant most active in helping ot
 **Official Vibe Guide Repo** (github.com/fhoffa/geotab-vibe-guide):
 - [PR #81](https://github.com/fhoffa/geotab-vibe-guide/pull/81) — Added Community-Contributed Guides section to RESOURCES.md, linking 9 guides covering Geotab integration patterns, architecture decisions, and vibe coding process
 
-**Reddit** — Banned from r/GEOTAB after posting contest content per the competition rules. Appeal sent to moderator. The thread was entirely empty before we started posting.
-
-All knowledge-sharing materials remain available on GitHub regardless of Reddit status.
+**Reddit** ([competition thread](https://www.reddit.com/r/GEOTAB/comments/1r242zb/the_geotab_vibe_coding_2026_competition_register/)) — The thread was entirely empty before we started posting. We were the first participant to engage and have maintained daily contributions:
+- Full project showcase with architecture breakdown, cost analysis, and resource links
+- Reusable prompt for converting technical guides into two-voice podcast episodes — showing others how to generate multimedia content from their own docs
+- Security checklist for first-time vibe coders — hardcoded secrets, .gitignore setup, credential rotation, and an AI-generated repo scanning prompt
+- Video editing tip for demo videos (prompt-based silence removal with ffmpeg)
+- Guide 13 (Going Global) shared as a production readiness roadmap
+- Active engagement with other participants' questions and projects
 
 ## Day 6: Multilingual Coaching (Feb 19)
 
