@@ -8,7 +8,9 @@
 
 **Geoff coaches every driver, after every shift, about every safety event.** Not with a report. Not with an email. With a face-to-face conversation delivered by a lip-synced AI avatar who knows what happened on the road today.
 
-**Demo video:** [Watch on YouTube](https://youtu.be/-KtFKp8wk-M)
+**[Demo video](https://youtu.be/-KtFKp8wk-M)** (3.5 min) | **[GitHub repo](https://github.com/robertlagrasse/geotab-geoff)** | **[All 12 guides](https://github.com/robertlagrasse/geotab-geoff/tree/main/guides)**
+
+**[Demonstrations playlist](https://www.youtube.com/playlist?list=PLJc554ozx033n8DtCxdzjjUJweoUnd5dq)** | **[Geoff Explainers — NotebookLM deep dives](https://www.youtube.com/playlist?list=PLJc554ozx031epUkMgx_jnIg7m3koczGl)** | **[Geoff in his own words](https://www.youtube.com/playlist?list=PLJc554ozx033qJkQ_TSEX_r5106JklITE)** | **[My Name's Geoff](https://youtube.com/shorts/GTz1UZnx7T8)**
 
 <p align="center">
   <img src="assets/coaching-speeding-cluster.png" alt="Geoff coaching a driver about a cluster of speeding events" width="800">

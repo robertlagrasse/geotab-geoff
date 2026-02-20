@@ -1,0 +1,16 @@
+TOPICS = [
+    {"topic": "How I built a Reddit bot in one conversation with Claude Code", "guide": None, "meta": True},
+    {"topic": "9 undocumented MyGeotab Add-In gotchas", "guide": "guides/05-mygeotab-addin-gotchas.md"},
+    {"topic": "The Ace AI async polling pattern", "guide": "guides/06-ace-ai-integration.md"},
+    {"topic": "Running GPU inference at $0.004/request on Cloud Run", "guide": "guides/08-cloud-run-gpu-on-a-budget.md"},
+    {"topic": "Why shift-level coaching beats event-level alerts", "guide": "guides/01-the-18920-line-first-commit.md"},
+    {"topic": "The server-side safety net: don't trust the LLM alone", "guide": "guides/04-server-side-safety-net.md"},
+    {"topic": "How to cost out an AI pipeline at $0.05/session", "guide": "guides/09-the-five-cent-pipeline.md"},
+    {"topic": "Stealing from the contact center industry", "guide": "guides/02-steal-from-another-industry.md"},
+    {"topic": "Building an MCP server for fleet data", "guide": "guides/10-mcp-server-patterns.md"},
+    {"topic": "When to correct the AI — four categories", "guide": "guides/11-when-to-correct-the-ai.md"},
+    {"topic": "OData Data Connector recipes for fleet analytics", "guide": "guides/07-odata-data-connector.md"},
+    {"topic": "From prompt to YouTube Short in 5 minutes", "guide": "guides/12-prompt-to-multimedia.md"},
+    {"topic": "Using AI to evaluate your own hackathon project", "guide": "guides/03-ai-evaluating-ai.md"},
+    {"topic": "What we learned building Geoff — competition wrap-up", "guide": None},
+]
