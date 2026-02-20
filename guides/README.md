@@ -33,3 +33,9 @@ Practical guides from building [Geotab Geoff](https://github.com/robertlagrasse/
 | # | Guide | Summary |
 |---|-------|---------|
 | 10 | [MCP Server Patterns](10-mcp-server-patterns.md) | Wrapping APIs for Claude Desktop — FastMCP, tool design, lazy initialization, testing |
+
+## Going Global
+
+| # | Guide | Summary |
+|---|-------|---------|
+| 13 | [Going Global](13-going-global.md) | Production roadmap for international fleet coaching — multi-region GPU, regulatory knowledge, avatar upgrades, cultural adaptation, data residency |
