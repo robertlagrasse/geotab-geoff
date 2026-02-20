@@ -85,6 +85,7 @@ Every step — from intelligence to voice to video to transcription — runs on 
 ### Driver Experience
 - Lip-synced avatar delivers coaching face-to-face — not a chatbot, not a report, a character who talks to you
 - Two-way voice conversation — drivers respond naturally and Geoff adapts
+- **Multilingual coaching** — 15 languages. Drivers choose their language on login; Gemini coaches in that language, Cloud TTS speaks it, Cloud STT transcribes it. Catalan gets a pitch-shifted female voice (only option Google offers) — the rest use Neural2 male voices
 - End-of-shift holistic review with pattern detection across events
 - Positive reinforcement on clean shifts (not just silence)
 
@@ -170,8 +171,8 @@ Every step — from intelligence to voice to video to transcription — runs on 
 | Backend | Cloud Functions v2 (Node.js 20) |
 | Database | Cloud Firestore (real-time listeners) |
 | AI Coach | Gemini 2.0 Flash via Vertex AI |
-| Text-to-Speech | Google Cloud TTS Neural2-D |
-| Speech-to-Text | Google Cloud Speech-to-Text |
+| Text-to-Speech | Google Cloud TTS Neural2 (15 languages) |
+| Speech-to-Text | Google Cloud Speech-to-Text (15 languages) |
 | Lip Sync | Wav2Lip on Cloud Run with NVIDIA L4 GPU |
 | Geotab API | mg-api-js SDK v3.0.0 |
 | Fleet Analytics | OData Data Connector |

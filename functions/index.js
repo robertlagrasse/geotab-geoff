@@ -76,7 +76,7 @@ export const onSafetyEvent = onDocumentCreated(
 export const beginCoaching = onCall(
   { region: 'us-central1', timeoutSeconds: 120 },
   async (request) => {
-    const { driverId, driverName, deviceName, fleetId } = request.data;
+    const { driverId, driverName, deviceName, fleetId, language } = request.data;
     const uid = request.auth?.uid;
     if (!uid) throw new Error('Unauthenticated');
     if (!driverId) throw new Error('driverId is required');
@@ -104,13 +104,14 @@ export const beginCoaching = onCall(
     }
 
     // 3. Generate shift coaching script with Gemini
+    const lang = language || 'en-US';
     const script = events.length > 0
-      ? await generateShiftCoachingScript(events, aceContext)
-      : await generatePositiveCoachingScript(driverName || 'Driver');
+      ? await generateShiftCoachingScript(events, aceContext, lang)
+      : await generatePositiveCoachingScript(driverName || 'Driver', lang);
 
     // 4. Synthesize TTS and generate lipsync video
     const sessionId = `shift_${Date.now()}`;
-    const audioUrl = await synthesizeSpeech(script.initialMessage, sessionId);
+    const audioUrl = await synthesizeSpeech(script.initialMessage, sessionId, lang);
     const videoUrl = await generateLipsyncVideo(audioUrl);
 
     // 5. Compute shift period
@@ -131,6 +132,7 @@ export const beginCoaching = onCall(
       eventSummaries: script.eventSummaries || [],
       eventCount: events.length,
       shiftPeriod,
+      language: lang,
       driverId,
       driverName: driverName || (events[0]?.driverName) || 'Driver',
       deviceName: deviceName || (events[0]?.deviceName) || '',
@@ -191,15 +193,17 @@ export const driverRespond = onCall(
     // Generate Geoff's response with the driver's real name
     const updatedSession = await sessionRef.get();
     const realName = driverName || sessionData.driverName || 'Driver';
+    const sessionLang = sessionData.language || 'en-US';
     const response = await continueConversation(
       updatedSession.data().transcript,
       sessionData.coachAnalysis,
       realName,
-      sessionData.eventSummaries || null
+      sessionData.eventSummaries || null,
+      sessionLang
     );
 
     // Synthesize response audio and generate lipsync video
-    const audioUrl = await synthesizeSpeech(response.message, `${sessionId}_${Date.now()}`);
+    const audioUrl = await synthesizeSpeech(response.message, `${sessionId}_${Date.now()}`, sessionLang);
     const videoUrl = await generateLipsyncVideo(audioUrl);
 
     // Add Geoff's reply
@@ -332,11 +336,11 @@ export const transcribe = onCall(
     const uid = request.auth?.uid;
     if (!uid) throw new Error('Unauthenticated');
 
-    const { audio } = request.data;
+    const { audio, language } = request.data;
     if (!audio) throw new Error('audio (base64) is required');
 
     const audioBuffer = Buffer.from(audio, 'base64');
-    const transcript = await transcribeAudio(audioBuffer);
+    const transcript = await transcribeAudio(audioBuffer, language || 'en-US');
     return { transcript };
   }
 );

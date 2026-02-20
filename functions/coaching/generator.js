@@ -21,6 +21,19 @@ const conversationModel = vertexAI.getGenerativeModel({
   },
 });
 
+const LANGUAGE_NAMES = {
+  'en-US': 'English', 'es-ES': 'Spanish', 'ca-ES': 'Catalan', 'fr-FR': 'French',
+  'pt-BR': 'Portuguese', 'de-DE': 'German', 'cmn-CN': 'Chinese (Mandarin)',
+  'hi-IN': 'Hindi', 'ar-XA': 'Arabic', 'ja-JP': 'Japanese', 'ko-KR': 'Korean',
+  'it-IT': 'Italian', 'nl-NL': 'Dutch', 'pl-PL': 'Polish', 'tr-TR': 'Turkish',
+};
+
+function languageInstruction(lang) {
+  if (!lang || lang === 'en-US') return '';
+  const name = LANGUAGE_NAMES[lang] || lang;
+  return `\n\nLANGUAGE: You MUST respond entirely in ${name}. All coaching messages, analysis text, summaries, and event descriptions must be written in ${name}. Do NOT mix in English unless quoting a proper noun.`;
+}
+
 const GEOFF_SYSTEM_PROMPT = `You are Geoff, a fleet safety coaching assistant for Geotab. You have a warm,
 conversational tone — like a trusted coworker who happens to have perfect recall
 of every piece of telemetry.
@@ -151,7 +164,7 @@ export function clusterEventsByLocation(events, radiusM = 300) {
   return clusters.filter((c) => c.eventIndices.length > 1);
 }
 
-export async function generateShiftCoachingScript(events, aceContext = null) {
+export async function generateShiftCoachingScript(events, aceContext = null, language = 'en-US') {
   if (!events || events.length === 0) throw new Error('No events to coach on');
 
   const driverName = events[0].driverName || 'Driver';
@@ -175,7 +188,7 @@ export async function generateShiftCoachingScript(events, aceContext = null) {
       try {
         startDate = evt.timestamp.toDate ? evt.timestamp.toDate() : new Date(evt.timestamp);
         if (!isNaN(startDate.getTime())) {
-          eventTime = startDate.toLocaleString('en-US', {
+          eventTime = startDate.toLocaleString(locale, {
             hour: 'numeric', minute: '2-digit', hour12: true, weekday: 'short',
           });
         }
@@ -187,7 +200,7 @@ export async function generateShiftCoachingScript(events, aceContext = null) {
     let timingLine;
     if (isMultiDayDuration(rawDuration) && startDate) {
       const endDate = new Date(startDate.getTime() + parseDurationMs(rawDuration));
-      const endTimeStr = endDate.toLocaleString('en-US', {
+      const endTimeStr = endDate.toLocaleString(locale, {
         hour: 'numeric', minute: '2-digit', hour12: true, weekday: 'short',
       });
       timingLine = `- Event start: ${eventTime}\n  - Event end: ${endTimeStr}`;
@@ -228,7 +241,9 @@ export async function generateShiftCoachingScript(events, aceContext = null) {
     .map(([type, count]) => `${count} ${type}`)
     .join(', ');
 
-  const prompt = `${GEOFF_SYSTEM_PROMPT}
+  const locale = language || 'en-US';
+
+  const prompt = `${GEOFF_SYSTEM_PROMPT}${languageInstruction(locale)}
 
 You are conducting an END-OF-SHIFT coaching review for a driver. You have ${events.length} safety events from their shift.
 
@@ -307,10 +322,10 @@ Generate a JSON response:
   return parsed;
 }
 
-export async function generatePositiveCoachingScript(driverName) {
+export async function generatePositiveCoachingScript(driverName, language = 'en-US') {
   const driverFirstName = /^Demo\b/i.test(driverName) ? 'Driver' : driverName.split(' ')[0];
 
-  const prompt = `${GEOFF_SYSTEM_PROMPT}
+  const prompt = `${GEOFF_SYSTEM_PROMPT}${languageInstruction(language)}
 
 You are conducting an END-OF-SHIFT check-in with a driver who had NO safety events this shift. This is a positive coaching session.
 
@@ -346,7 +361,7 @@ Generate a JSON response:
   return JSON.parse(jsonMatch[0]);
 }
 
-export async function generateCoachingScript(eventData, aceContext) {
+export async function generateCoachingScript(eventData, aceContext, language = 'en-US') {
   const rawName = eventData.driverName || 'Driver';
   // Demo database uses device names like "Demo - 01" — use "Driver" so client can substitute the real name
   const driverFirstName = /^Demo\b/i.test(rawName) ? 'Driver' : rawName.split(' ')[0];
@@ -365,7 +380,7 @@ export async function generateCoachingScript(eventData, aceContext) {
         ? eventData.timestamp.toDate()
         : new Date(eventData.timestamp);
       if (!isNaN(date.getTime())) {
-        eventTime = date.toLocaleString('en-US', {
+        eventTime = date.toLocaleString(language || 'en-US', {
           hour: 'numeric',
           minute: '2-digit',
           hour12: true,
@@ -381,7 +396,7 @@ export async function generateCoachingScript(eventData, aceContext) {
     ? `GPS coordinates available (shown on map for driver)`
     : 'location unknown';
 
-  const prompt = `${GEOFF_SYSTEM_PROMPT}
+  const prompt = `${GEOFF_SYSTEM_PROMPT}${languageInstruction(language)}
 
 You are coaching a driver about a safety event. Generate the initial coaching message.
 
@@ -434,7 +449,7 @@ Generate a JSON response with these fields:
   return JSON.parse(jsonMatch[0]);
 }
 
-export async function continueConversation(transcript, coachAnalysis, driverName = 'Driver', eventSummaries = null) {
+export async function continueConversation(transcript, coachAnalysis, driverName = 'Driver', eventSummaries = null, language = 'en-US') {
   const firstName = driverName.split(' ')[0];
   const conversationHistory = transcript
     .map((t) => `${t.speaker === 'geoff' ? 'Geoff' : firstName}: ${t.text}`)
@@ -458,7 +473,7 @@ export async function continueConversation(transcript, coachAnalysis, driverName
     ? `\n\n⚠️ DATA SEVERITY ALERT: ${dataSeverityNote.join(', ')}. This ALONE requires escalation under trigger F.`
     : '';
 
-  const prompt = `${GEOFF_SYSTEM_PROMPT}
+  const prompt = `${GEOFF_SYSTEM_PROMPT}${languageInstruction(language)}
 
 Continue this coaching conversation with ${firstName}. They just responded.
 This is a shift-level coaching session covering ${eventCount} events.

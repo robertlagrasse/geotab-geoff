@@ -384,6 +384,29 @@ The "Most Collaborative" prize goes to the participant most active in helping ot
 
 All knowledge-sharing materials remain available on GitHub regardless of Reddit status.
 
+## Day 6: Multilingual Coaching (Feb 19)
+
+### 15 Languages in One Session
+
+The prompt: "Add a language dropdown to the RoleSelect page so drivers choose what language Geoff coaches in. Affects Gemini coaching output, TTS voice, and STT recognition. 15 languages, default English."
+
+Claude planned the change across 7 files, then implemented it in a single pass:
+
+1. **Shared config** (`app/src/config/languages.js`) — 15 languages from English to Turkish
+2. **RoleSelect dropdown** — language saved to Firestore user profile, persists across logins
+3. **Gemini prompts** — `languageInstruction()` helper appends "You MUST respond entirely in {language}" for non-English sessions. Gemini handles multilingual natively — no translated prompts needed
+4. **Cloud TTS** — 15 Neural2 male voices, one per language. Date formatting in coaching prompts uses the language locale
+5. **Cloud STT** — language code passed through to Speech-to-Text for accurate transcription
+6. **Session persistence** — language stored on the session doc so `driverRespond` reads it from Firestore, not from the frontend
+
+The entire feature — plan, implement, build, deploy — took one conversation. The architecture was clean because the existing code already parameterized `language` in TTS and STT (from the `ttsProxy` endpoint) — it just wasn't wired through the coaching pipeline.
+
+### The Catalan Voice Problem
+
+Testing revealed Catalan sounded female. Investigation showed Google Cloud TTS only offers **one Catalan voice** (`ca-ES-Standard-B`, female) — no male option exists. The fix: a per-language pitch override map. Catalan gets `-6.0` semitones (vs `-1.5` default), which deepens the voice enough to sound plausibly masculine without sounding robotic. A pragmatic workaround for a platform limitation.
+
+This is a good example of how multilingual support surfaces edge cases you can't anticipate from English-only development. Each language has different TTS voice availability, different Neural2 coverage, and different acoustic characteristics.
+
 ## What AI Couldn't Do
 
 **Run the GPU.** Wav2Lip requires an NVIDIA GPU. Claude configured the Docker container, API, and Cloud Run deployment, but the initial local GPU setup (RTX 4060 Ti, Cloudflare tunnel) required manual work. The migration to Cloud Run GPU was fully AI-driven.

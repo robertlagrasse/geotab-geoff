@@ -23,7 +23,7 @@ function personalizeText(text, name) {
 export default function CoachingSession() {
   const { sessionId } = useParams();
   const navigate = useNavigate();
-  const { user, loading: authLoading } = useAuth();
+  const { user, userProfile, loading: authLoading } = useAuth();
   const [session, setSession] = useState(null);
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [selectedEventData, setSelectedEventData] = useState(null);
@@ -173,7 +173,7 @@ export default function CoachingSession() {
           for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
           const base64 = btoa(binary);
           setIsProcessing(true);
-          const result = await transcribeFn({ audio: base64 });
+          const result = await transcribeFn({ audio: base64, language: userProfile?.language || 'en-US' });
           const transcript = result.data.transcript;
           setIsProcessing(false);
           if (transcript?.trim()) {

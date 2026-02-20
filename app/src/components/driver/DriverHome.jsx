@@ -27,7 +27,7 @@ function personalizeText(text, name) {
 
 
 export default function DriverHome() {
-  const { user } = useAuth();
+  const { user, userProfile } = useAuth();
   const [pendingEvents, setPendingEvents] = useState([]);
   const [sessions, setSessions] = useState([]);
   const [drivers, setDrivers] = useState([]);
@@ -130,6 +130,7 @@ export default function DriverHome() {
         driverName: selectedDriverData?.name || 'Driver',
         deviceName: pendingEvents[0]?.deviceName || '',
         fleetId: pendingEvents[0]?.fleetId || 'default',
+        language: userProfile?.language || 'en-US',
       });
       navigate(`/driver/session/${result.data.sessionId}`);
     } catch (err) {
