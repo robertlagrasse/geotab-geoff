@@ -14,4 +14,3 @@ app/dist-addin/
 *.mp4
 *.wav
 !demos/*.mp4
-reddit-bot/.env
