@@ -253,7 +253,7 @@ The gap analysis process moved the score from 7.7 → 8.675 across focused optim
 
 ## Git Commit History Analysis
 
-38 commits over 3 days. Every line of code written through conversation with Claude.
+46 commits over 6 days. Every line of code written through conversation with Claude.
 
 ```
 Feb 15 17:10  bd6f115  Initial commit: Geotab Geoff AI coaching platform          [18,920 lines, 60 files]
@@ -297,6 +297,11 @@ Feb 17 11:30  1ac4b50  Update status: submitted, Reddit engagement              
 Feb 17 13:00  d191e49  Add 12 comprehensive guides for vibe coding                  [+2688, 14 files]
 Feb 17 14:30  21307e5  Add AI-generated podcast: The 18,920-Line First Commit       [+26, 2 files]
 Feb 17 16:00  d5db972  Add 11 AI-generated podcast episodes (02-12)                 [11 MP3 files]
+Feb 18 -----  -------  (Reddit bot experiment — added and removed)                 [2 commits]
+Feb 19 19:35  09e34d4  Add multilingual coaching — 15 languages E2E                [+118 -26, 9 files]
+Feb 19 19:40  83af1c1  Add multilingual coaching demo videos                        [2 MP4 files]
+Feb 20 07:11  8c227dd  Add Ready for Barcelona section to README                    [+16, 1 file]
+Feb 20 07:43  c601265  Add Guide 13: Going Global — production readiness roadmap    [+307, 3 files]
 ```
 
 ### Development Cadence
@@ -314,6 +319,8 @@ Feb 17 16:00  d5db972  Add 11 AI-generated podcast episodes (02-12)             
 | **Content pipeline** (Feb 16, 8-10pm) | 2 hr | 6 | 9-video Geoff Explains series + NotebookLM + YouTube |
 | **Demo & meme** (Feb 17, 8-10am) | 2 hr | 2 | Demo video edit, "My Name's Geoff" meme — submission day |
 | **Knowledge sharing** (Feb 17, afternoon) | 4 hr | 3 | 12 guides, 12 podcast episodes, community materials |
+| **Multilingual** (Feb 19, evening) | 1 hr | 2 | 15 languages across Gemini, TTS, STT — plan + implement + deploy |
+| **Global roadmap** (Feb 20, morning) | 1 hr | 2 | Guide 13, README updates, Barcelona positioning |
 
 ### What the History Shows
 
@@ -407,6 +414,16 @@ Testing revealed Catalan sounded female. Investigation showed Google Cloud TTS o
 
 This is a good example of how multilingual support surfaces edge cases you can't anticipate from English-only development. Each language has different TTS voice availability, different Neural2 coverage, and different acoustic characteristics.
 
+### Going Global: The Production Roadmap
+
+With multilingual working, the natural question: what does it take to go from demo to global production? The human framed the scope:
+
+- "Geoff is a modular system. The avatar is a container. For international support, we'd need containers in other regions. We'd want to upgrade from Wav2Lip to something like Synthesia. And Geoff needs to know actual safety regulations — not just 'don't speed.'"
+
+Claude wrote a comprehensive production readiness guide ([Guide 13: Going Global](guides/13-going-global.md)) covering 7 dimensions: multi-region GPU deployment (3 Cloud Run regions with cold start scheduling), the avatar upgrade path from Wav2Lip to Synthesia (one function swap), a regulatory knowledge base architecture (structured JSON per country injected into Gemini prompts), cultural coaching adaptation (personality variants per region), data residency for GDPR, production monitoring, and a 6-phase deployment roadmap.
+
+The key insight the human contributed: the hardest part of going global isn't engineering — it's curating accurate regulatory knowledge for 160 countries. Speed limits, hours-of-service rules, vehicle class restrictions, penalty point systems — all vary by jurisdiction. That's a content problem, not a code problem. The architecture handles it cleanly (inject regulatory context into the Gemini prompt), but someone has to write the regulation files. Geotab's own rule engine and Ace AI are the natural data sources.
+
 ## What AI Couldn't Do
 
 **Run the GPU.** Wav2Lip requires an NVIDIA GPU. Claude configured the Docker container, API, and Cloud Run deployment, but the initial local GPU setup (RTX 4060 Ti, Cloudflare tunnel) required manual work. The migration to Cloud Run GPU was fully AI-driven.
@@ -421,13 +438,15 @@ This is a good example of how multilingual support surfaces edge cases you can't
 
 | Metric | Value |
 |--------|-------|
-| Total development time | ~24 hours across 3 days |
-| Lines of code (JS/JSX) | ~4,700 |
+| Total development time | ~26 hours across 6 days |
+| Lines of code (JS/JSX) | ~4,800 |
 | Lines of code (Python) | ~5,200 |
 | Cloud Functions | 8 deployed |
 | React components | 15 |
 | MCP tools | 6 |
 | Geotab API methods used | 6 (Get, ExceptionEvent, Driver, LogRecord, GetRoadMaxSpeeds, GetAceResults) |
+| Languages supported | 15 (en, es, ca, fr, pt, de, zh, hi, ar, ja, ko, it, nl, pl, tr) |
+| Guides | 13 |
 | GCP services | 9 (Vertex AI, Cloud TTS, Cloud STT, Firebase Auth, Hosting, Functions, Firestore, Cloud Storage, Cloud Run GPU) |
 
 ## Tools Used
