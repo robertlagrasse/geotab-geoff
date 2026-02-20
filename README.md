@@ -122,6 +122,22 @@ Every step — from intelligence to voice to video to transcription — runs on 
 - Tools: `get_safety_events`, `get_fleet_kpis`, `get_driver_rankings`, `get_vehicle_details`, `get_driver_history`, `ask_ace`
 - Enables conversational fleet management from any MCP-compatible AI assistant
 
+### Ready for Barcelona
+
+Geotab operates in 160 countries. Fleet drivers don't all speak English — and they shouldn't have to. Geoff coaches in **15 languages** end-to-end:
+
+**English** | **Spanish** | **Catalan** | **French** | **Portuguese** | **German** | **Chinese** | **Hindi** | **Arabic** | **Japanese** | **Korean** | **Italian** | **Dutch** | **Polish** | **Turkish**
+
+The driver picks their language once on login. From that point forward, every layer of the pipeline adapts:
+- **Gemini** generates coaching scripts in the selected language — no translated prompt templates, just a language instruction that Gemini handles natively
+- **Cloud TTS** speaks with a language-appropriate Neural2 male voice (15 voices, one per language)
+- **Cloud STT** transcribes driver voice input in the correct language
+- **Date/time formatting** in coaching prompts uses the language's locale
+
+The language preference persists in Firestore — drivers don't re-select every session. Barcelona drivers get coaching in Catalan or Spanish. A fleet operating across Spain, France, and Germany gets coaching in three languages with zero configuration per driver beyond initial selection.
+
+Demo videos: [Spanish coaching](demos/multilingual-spanish.mp4) | [Catalan coaching](demos/multilingual-catalan.mp4)
+
 ---
 
 ## Architecture
