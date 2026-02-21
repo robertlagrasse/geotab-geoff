@@ -356,6 +356,7 @@ Everything we learned building Geoff, we shared back. Guides, podcasts, code pat
 
 **r/GEOTAB** — The [competition thread](https://www.reddit.com/r/GEOTAB/comments/1r242zb/the_geotab_vibe_coding_2026_competition_register/) was empty when we found it. We were the first participant to engage — posting demo videos, architecture walkthroughs, and lipsync pipeline showcases. Ongoing contributions include:
 - Project showcase with full architecture, cost breakdown, and all resource links
+- Copy-paste Ace AI 3-step async pipeline with gotchas (create-chat → send-prompt → poll get-message-group)
 - Reusable prompt for turning technical guides into two-voice podcast episodes
 - Security checklist for first-time vibe coders (hardcoded secrets, .gitignore, credential rotation, AI-generated repo scanning prompt)
 

@@ -389,6 +389,7 @@ The "Most Collaborative" prize goes to the participant most active in helping ot
 
 **Reddit** ([competition thread](https://www.reddit.com/r/GEOTAB/comments/1r242zb/the_geotab_vibe_coding_2026_competition_register/)) — The thread was entirely empty before we started posting. We were the first participant to engage and have maintained daily contributions:
 - Full project showcase with architecture breakdown, cost analysis, and resource links
+- Copy-paste Ace AI 3-step async pipeline — the create-chat → send-prompt → poll pattern with gotchas that cost us time (messageGroupId location inconsistency, required initial wait, customerData flag)
 - Reusable prompt for converting technical guides into two-voice podcast episodes — showing others how to generate multimedia content from their own docs
 - Security checklist for first-time vibe coders — hardcoded secrets, .gitignore setup, credential rotation, and an AI-generated repo scanning prompt
 - Video editing tip for demo videos (prompt-based silence removal with ffmpeg)
